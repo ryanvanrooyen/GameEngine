@@ -15,7 +15,7 @@ DEBUG = n
 OUTDIR = bin/release
 
 ifeq ($(DEBUG), y)
-	CFLAGS += -g
+	CFLAGS += -g -D DEBUG
 	OUTDIR = bin/debug
 endif
 
