@@ -14,13 +14,16 @@ COMPILE = ${CC} $(CFLAGS) $(LIB_GLAD) $(HEADERS_GLAD) $(LIB_GLFW) $(HEADERS_GLFW
 DEBUG = n
 OUTDIR = bin/release
 
+SOURCE_FILES = $(wildcard source/*.cpp)
+# tests: behavior_tree.hpp
+
 ifeq ($(DEBUG), y)
 	CFLAGS += -g -D DEBUG
 	OUTDIR = bin/debug
 endif
 
 main: main.cpp mk_dir
-	$(COMPILE) main.cpp -o $(OUTDIR)/main
+	$(COMPILE) main.cpp $(SOURCE_FILES) -o $(OUTDIR)/main
 
 # Examples:
 # example%: $(OBJS) mk_dir

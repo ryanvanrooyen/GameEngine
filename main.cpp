@@ -1,45 +1,18 @@
 
-#include <glad/glad.h>
-
 #define GL_SILENCE_DEPRECATION
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <signal.h>
+#include "source/logging.hpp"
+#include "source/Renderer.hpp"
+#include "source/VertexBuffer.hpp"
+#include "source/IndexBuffer.hpp"
 
 using std::string;
-
-#define WARN(msg) fprintf(stderr, msg)
-#define WARNF(fmt, ...) fprintf(stderr, fmt, __VA_ARGS__)
-
-#ifdef DEBUG
-    #define ASSERT(x) if (!(x)) __asm__("int $3")
-#else
-    #define ASSERT(x)
-#endif
-
-#define GLCall(x) GLClearErrors(); x; ASSERT(GLCheckErrors(#x, __FILE__, __LINE__))
-
-static void GLClearErrors()
-{
-    while (glGetError());
-}
-
-static bool GLCheckErrors(const char * function, const char* file, int line)
-{
-    bool noErrors = true;
-    while (GLenum error = glGetError())
-    {
-        std::cout << "[OpenGL Error "
-            << std::showbase << std::hex << error << "]: "
-            << function << " " << file << ":"
-            << std::dec << line << std::endl;
-        noErrors = false;
-    }
-    return noErrors;
-}
 
 struct ShaderSource
 {
@@ -121,9 +94,8 @@ static unsigned int compileShader(unsigned int type, const string& shader)
         GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
         char* message = (char*)alloca(length * sizeof(char));
         GLCall(glGetShaderInfoLog(id, length, &length, message));
-        std::cout << "Failed to compile "
-            << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
-            << " shader: " << message << std::endl;
+        const char* shaderType = type == GL_VERTEX_SHADER ? "vertex" : "fragment";
+        WARNF("Failed to compile %s shader: %s\n", shaderType, message);
         GLCall(glDeleteShader(id));
         return 0;
     }
@@ -167,8 +139,7 @@ static unsigned int createShader(const string& vertextShader, const string& frag
 static void SetUniformVector4(unsigned int programId, const char* variableName, float v1, float v2, float v3, float v4)
 {
     GLCall(unsigned int uniformLocation = glGetUniformLocation(programId, variableName));
-    if (uniformLocation == -1)
-        WARNF("Uniform \"%s\" not found\n", variableName);
+    DEBUG_CHECKF(uniformLocation != -1, "Uniform \"%s\" not found\n", variableName);
     GLCall(glUniform4f(uniformLocation, v1, v2, v3, v4));
 }
 
@@ -218,6 +189,10 @@ int main()
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
+    unsigned int vao;
+    GLCall(glGenVertexArrays(1, &vao));
+    GLCall(glBindVertexArray(vao));
+
     float positions[] = {
         -0.5f, -0.5f,
          0.5f, -0.5f,
@@ -225,19 +200,14 @@ int main()
         -0.5f,  0.5f,
     };
 
+    VertexBuffer vertexBuffer(positions, 4 * 2 * sizeof(float));
+
     unsigned int indicies[] = {
         0, 1, 2,
         2, 3, 0,
     };
 
-    unsigned int buffer;
-    GLCall(glGenBuffers(1, &buffer));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW));
-
-    GLuint vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
+    IndexBuffer indexBuffer(indicies, 6);
 
     // ShaderSource shaders = ParseShader("shaders/shaders.glsl");
     // std::cout << "Loaded Vertex Shader:" << shaders.VertexShader << std::endl;
@@ -252,18 +222,11 @@ int main()
     GLCall(glValidateProgram(program));
     GLCall(glUseProgram(program));
 
-
     GLCall(GLint posAttr = glGetAttribLocation(program, "position"));
     // std::cout << "Position Attirbute: " << posAttr << std::endl;
 
     GLCall(glEnableVertexAttribArray(posAttr));
     GLCall(glVertexAttribPointer(posAttr, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
-
-    unsigned int indexBuffer;
-    GLCall(glGenBuffers(1, &indexBuffer));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indicies, GL_STATIC_DRAW));
-
 
     float redColor = 0.0f;
     float increment = 0.05f;
@@ -286,7 +249,7 @@ int main()
 
         redColor += increment;
 
-        /* Swap front and back buffers */
+        // Swap front and back buffers
         glfwSwapBuffers(window);
     }
 
