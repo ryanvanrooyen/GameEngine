@@ -10,7 +10,9 @@
 #include "source/logging.hpp"
 #include "source/Renderer.hpp"
 #include "source/VertexBuffer.hpp"
+#include "source/VertexBufferLayout.hpp"
 #include "source/IndexBuffer.hpp"
+#include "source/VertexArray.hpp"
 
 using std::string;
 
@@ -189,10 +191,6 @@ int main()
 
     std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
-    unsigned int vao;
-    GLCall(glGenVertexArrays(1, &vao));
-    GLCall(glBindVertexArray(vao));
-
     float positions[] = {
         -0.5f, -0.5f,
          0.5f, -0.5f,
@@ -201,6 +199,12 @@ int main()
     };
 
     VertexBuffer vertexBuffer(positions, 4 * 2 * sizeof(float));
+
+    VertexBufferLayout vertexLayout;
+    vertexLayout.Push<float>(2);
+
+    VertexArray va;
+    va.AddBuffer(vertexBuffer, vertexLayout);
 
     unsigned int indicies[] = {
         0, 1, 2,
@@ -221,12 +225,6 @@ int main()
     GLCall(glLinkProgram(program));
     GLCall(glValidateProgram(program));
     GLCall(glUseProgram(program));
-
-    GLCall(GLint posAttr = glGetAttribLocation(program, "position"));
-    // std::cout << "Position Attirbute: " << posAttr << std::endl;
-
-    GLCall(glEnableVertexAttribArray(posAttr));
-    GLCall(glVertexAttribPointer(posAttr, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
 
     float redColor = 0.0f;
     float increment = 0.05f;
