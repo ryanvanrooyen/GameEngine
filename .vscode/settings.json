@@ -57,5 +57,10 @@
         "mutex": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp"
+    },
+    "files.exclude": {
+        ".vscode": true,
+        "bin": true,
+        "libs": true
     }
 }
