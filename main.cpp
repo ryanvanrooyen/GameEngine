@@ -1,7 +1,6 @@
 
 #define GL_SILENCE_DEPRECATION
 #include "source/rendering/opengl.hpp"
-#include <GLFW/glfw3.h>
 #include <string>
 #include <signal.h>
 #include "source/logging.h"
@@ -89,6 +88,8 @@ int main()
     shader.Compile();
     shader.Bind();
 
+    Renderer renderer;
+
     float redColor = 0.0f;
     float increment = 0.05f;
 
@@ -99,11 +100,12 @@ int main()
         glfwPollEvents();
         // glfwWaitEvents();
 
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        renderer.Clear();
 
-        // GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+        shader.Bind();
         shader.SetUniform4f("u_Color", redColor, 0.3f, 0.8f, 1.f);
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+        renderer.Draw(va, indexBuffer, shader);
 
         if (redColor > 1.f || redColor < 0.f)
             increment = -increment;
