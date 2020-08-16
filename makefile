@@ -30,16 +30,16 @@ endif
 
 EXECUTABLE = $(OUTDIR)/main
 
-main: $(EXECUTABLE)
-	@echo "Build Succeeded"
+main: $(EXECUTABLE) ;
 
 $(EXECUTABLE): $(OBJECT_FILES)
-	@echo "Linking $@"
+	# Linking $@
 	@$(LINK) -o $(EXECUTABLE) $(OBJECT_FILES)
+	# Build Succeeded
 
 # Compile individual files:
 $(OUTDIR)/%.o: %.cpp $(HEADER_FILES)
-	@echo "Compiling $< -> $@"
+	# Compiling $< -> $@
 	@mkdir -p $(@D)
 	@$(COMPILE) -c $< -o $@
 
