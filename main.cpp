@@ -1,17 +1,16 @@
 
 #define GL_SILENCE_DEPRECATION
-#include <glad/glad.h>
+#include "source/rendering/opengl.hpp"
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <string>
 #include <signal.h>
-#include "source/logging.hpp"
-#include "source/Renderer.hpp"
-#include "source/Shader.hpp"
-#include "source/VertexBuffer.hpp"
-#include "source/VertexBufferLayout.hpp"
-#include "source/IndexBuffer.hpp"
-#include "source/VertexArray.hpp"
+#include "source/logging.h"
+#include "source/rendering/Renderer.hpp"
+#include "source/rendering/Shader.hpp"
+#include "source/rendering/VertexBuffer.hpp"
+#include "source/rendering/VertexBufferLayout.hpp"
+#include "source/rendering/IndexBuffer.hpp"
+#include "source/rendering/VertexArray.hpp"
 
 using std::string;
 
@@ -58,7 +57,7 @@ int main()
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
-        std::cout << "Failed to initialize OpenGL context" << std::endl;
+        ERROR("Failed to initialize OpenGL context");
         return -1;
     }
 

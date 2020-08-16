@@ -1,6 +1,6 @@
 
 #include "VertexBuffer.hpp"
-#include "Renderer.hpp"
+#include "opengl.hpp"
 
 VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 {

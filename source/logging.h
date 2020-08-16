@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#define LOG_DESTINATION stderr
+
 #ifndef LOGLEVEL
     #define LOGLEVEL 0
 #endif
@@ -14,7 +16,7 @@
 #endif
 
 #if LOGLEVEL > 0
-    #define LOG(level, file, line, msg, ...) fprintf(stderr, "%s: ./%s:%d: " msg "\n", level, file, line, ##__VA_ARGS__)
+    #define LOG(level, file, line, msg, ...) fprintf(LOG_DESTINATION, "%s: ./%s:%d: " msg "\n", level, file, line, ##__VA_ARGS__)
     #define ERROR(...) LOG("ERROR", __FILE__, __LINE__, __VA_ARGS__)
     #define ERROR_DETAILS(file, line, msg, ...) LOG("ERROR", file, line, msg, __VA_ARGS__)
     #define ASSERT(x, ...) if (!(x)) { BREAKPOINT(); ERROR(__VA_ARGS__); }

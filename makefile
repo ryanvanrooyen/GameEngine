@@ -1,22 +1,23 @@
 
 CC = g++
-CFLAGS = --std=c++11
+CFLAGS = --std=c++11 -Wall
 
 LIB_GLAD = -L libs/glad -l glad
 HEADERS_GLAD = -I libs/glad/include
 LIB_GLFW = -L libs/glfw-3.3.2/lib -l glfw3
 HEADERS_GLFW = -I libs/glfw-3.3.2/include
-
 FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit
-# COMPILE = ${CC} $(CFLAGS) $(LIB_GLFW) $(HEADERS_GLFW) $(FRAMEWORKS)
-COMPILE = ${CC} $(CFLAGS) $(LIB_GLAD) $(HEADERS_GLAD) $(LIB_GLFW) $(HEADERS_GLFW) $(FRAMEWORKS)
+
+COMPILE = ${CC} $(CFLAGS) $(HEADERS_GLAD) $(HEADERS_GLFW)
+LINK = ${CC} $(CFLAGS) $(LIB_GLAD) $(LIB_GLFW) $(FRAMEWORKS)
+
+HEADER_FILES = $(wildcard source/**.h source/**.hpp source/**/*.h source/**/*.hpp)
+CPP_FILES = main.cpp $(wildcard source/**.cpp source/**/*.cpp)
+OBJECT_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(CPP_FILES))
 
 debug ?= 0
 loglevel ?= 0
 OUTDIR = bin/release
-
-SOURCE_FILES = $(wildcard source/*.cpp)
-# tests: behavior_tree.hpp
 
 ifneq ($(debug), 0)
 	CFLAGS += -g -D DEBUG
@@ -27,14 +28,21 @@ ifneq ($(loglevel), 0)
 	CFLAGS += -D LOGLEVEL=$(loglevel)
 endif
 
-main: main.cpp mk_dir
-	$(COMPILE) main.cpp $(SOURCE_FILES) -o $(OUTDIR)/main
+EXECUTABLE = $(OUTDIR)/main
 
-# Examples:
-# example%: $(OBJS) mk_dir
-# 	$(CC) $(CFLAGS) examples/$@.cpp -o $(OUTDIR)/$@
+main: $(EXECUTABLE)
+	@echo "Build Succeeded"
 
-# Source files:
+$(EXECUTABLE): $(OBJECT_FILES)
+	@echo "Linking $@"
+	@$(LINK) -o $(EXECUTABLE) $(OBJECT_FILES)
+
+# Compile individual files:
+$(OUTDIR)/%.o: %.cpp $(HEADER_FILES)
+	@echo "Compiling $< -> $@"
+	@mkdir -p $(@D)
+	@$(COMPILE) -c $< -o $@
+
 mk_dir:
 	mkdir -p $(OUTDIR)
 

@@ -1,6 +1,6 @@
 
 #include "Shader.hpp"
-#include "Renderer.hpp"
+#include "opengl.hpp"
 #include <sstream>
 #include <fstream>
 
@@ -98,8 +98,7 @@ static unsigned int compileShaderFile(unsigned int type, const string& filepath)
         GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
         char* message = (char*)alloca(length * sizeof(char));
         GLCall(glGetShaderInfoLog(id, length, &length, message));
-        const char* shaderType = type == GL_VERTEX_SHADER ? "vertex" : "fragment";
-        WARN("Failed to compile %s shader: %s", shaderType, message);
+        WARN("Failed to compile %s shader: %s", GL_VERTEX_SHADER ? "vertex" : "fragment", message);
         GLCall(glDeleteShader(id));
         return 0;
     }

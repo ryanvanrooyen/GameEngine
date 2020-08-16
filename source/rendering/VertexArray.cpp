@@ -1,6 +1,6 @@
 
 #include "VertexArray.hpp"
-#include "Renderer.hpp"
+#include "opengl.hpp"
 
 VertexArray::VertexArray()
 {

@@ -1,6 +1,6 @@
 
 #include "IndexBuffer.hpp"
-#include "Renderer.hpp"
+#include "opengl.hpp"
 
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
     : count(count)

@@ -1,8 +1,6 @@
 
-#pragma once
-
 #include <glad/glad.h>
-#include "logging.hpp"
+#include "../logging.h"
 
 #define GLCall(x) GLClearErrors(); x; ASSERT(GLCheckErrors(#x, __FILE__, __LINE__), "OpenGL Call Failed")
 
