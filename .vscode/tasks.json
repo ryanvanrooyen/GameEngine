@@ -4,7 +4,7 @@
         {
             "label": "Release",
             "type": "shell",
-            "command": "make --silent",
+            "command": "make loglevel=3 --silent",
             "presentation": {
                 "echo": false,
                 "reveal": "never",
@@ -19,7 +19,7 @@
         {
             "label": "Debug",
             "type": "shell",
-            "command": "make DEBUG=y --silent",
+            "command": "make loglevel=3 debug=1 --silent",
             "presentation": {
                 "echo": false,
                 "reveal": "never",

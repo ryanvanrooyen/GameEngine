@@ -56,12 +56,12 @@ int Shader::GetUniformLocation(const std::string& name)
     }
     else
     {
-        INFOF("Getting uniform location for \"%s\"", nameStr);
+        INFO("Getting uniform location for \"%s\"", nameStr);
         GLCall(uniformLocation = glGetUniformLocation(rendererId, nameStr));
         uniformCache[name] = uniformLocation;
     }
 
-    ASSERT_WARNF(uniformLocation != -1, "Uniform \"%s\" not found", nameStr);
+    ASSERT_WARN(uniformLocation != -1, "Uniform \"%s\" not found", nameStr);
     return uniformLocation;
 }
 
@@ -99,7 +99,7 @@ static unsigned int compileShaderFile(unsigned int type, const string& filepath)
         char* message = (char*)alloca(length * sizeof(char));
         GLCall(glGetShaderInfoLog(id, length, &length, message));
         const char* shaderType = type == GL_VERTEX_SHADER ? "vertex" : "fragment";
-        WARNF("Failed to compile %s shader: %s", shaderType, message);
+        WARN("Failed to compile %s shader: %s", shaderType, message);
         GLCall(glDeleteShader(id));
         return 0;
     }

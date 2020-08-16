@@ -18,7 +18,7 @@ using std::string;
 
 static void error_callback(int error, const char* description)
 {
-    ERRORF("Error: %s", description);
+    ERROR("Error: %s", description);
 }
 
 
@@ -62,7 +62,7 @@ int main()
         return -1;
     }
 
-    INFOF("OpenGL Version %s", glGetString(GL_VERSION));
+    INFO("OpenGL Version %s", glGetString(GL_VERSION));
 
     float positions[] = {
         -0.5f, -0.5f,

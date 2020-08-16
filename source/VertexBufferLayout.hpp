@@ -18,7 +18,7 @@ struct VertexBufferElement
             case GL_UNSIGNED_INT:   return sizeof(GLuint);
             case GL_UNSIGNED_BYTE:  return sizeof(GLbyte);
         }
-        ASSERT(false);
+        ASSERT(false, "Invalid vertex element type: %d", type);
         return 0;
     }
 };

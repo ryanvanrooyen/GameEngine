@@ -11,15 +11,20 @@ FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit
 # COMPILE = ${CC} $(CFLAGS) $(LIB_GLFW) $(HEADERS_GLFW) $(FRAMEWORKS)
 COMPILE = ${CC} $(CFLAGS) $(LIB_GLAD) $(HEADERS_GLAD) $(LIB_GLFW) $(HEADERS_GLFW) $(FRAMEWORKS)
 
-DEBUG = n
+debug ?= 0
+loglevel ?= 0
 OUTDIR = bin/release
 
 SOURCE_FILES = $(wildcard source/*.cpp)
 # tests: behavior_tree.hpp
 
-ifeq ($(DEBUG), y)
+ifneq ($(debug), 0)
 	CFLAGS += -g -D DEBUG
 	OUTDIR = bin/debug
+endif
+
+ifneq ($(loglevel), 0)
+	CFLAGS += -D LOGLEVEL=$(loglevel)
 endif
 
 main: main.cpp mk_dir

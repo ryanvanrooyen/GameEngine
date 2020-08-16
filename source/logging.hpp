@@ -1,46 +1,42 @@
 
 #pragma once
 
-#define LOGLEVEL 3
+#include <stdio.h>
 
-#define LOG(level, msg) fprintf(stderr, level msg "\n")
-#define LOGF(level, fmt, ...) fprintf(stderr, level fmt "\n", __VA_ARGS__)
+#ifndef LOGLEVEL
+    #define LOGLEVEL 0
+#endif
+
+#ifdef DEBUG
+    #define BREAKPOINT() __asm__("int $3")
+#else
+    #define BREAKPOINT()
+#endif
 
 #if LOGLEVEL > 0
-    #define ERROR(msg) LOG("ERROR: ", msg)
-    #define ERRORF(fmt, ...) LOGF("ERROR: ", fmt, __VA_ARGS__)
+    #define LOG(level, file, line, msg, ...) fprintf(stderr, "%s: ./%s:%d: " msg "\n", level, file, line, ##__VA_ARGS__)
+    #define ERROR(...) LOG("ERROR", __FILE__, __LINE__, __VA_ARGS__)
+    #define ERROR_DETAILS(file, line, msg, ...) LOG("ERROR", file, line, msg, __VA_ARGS__)
+    #define ASSERT(x, ...) if (!(x)) { BREAKPOINT(); ERROR(__VA_ARGS__); }
 #else
-    #define ERROR(msg)
-    #define ERRORF(fmt, ...)
+    #define LOG(level, file, line, msg, ...)
+    #define ERROR(...)
+    #define ERROR_DETAILS(file, line, msg, ...) LOG("ERROR", file, line, msg, __VA_ARGS__)
+    #define ASSERT(x, ...)
 #endif
 
 #if LOGLEVEL > 1
-    #define WARN(msg) LOG("WARN: ", msg)
-    #define WARNF(fmt, ...) LOGF("WARN: ", fmt, __VA_ARGS__)
-    #define ASSERT_WARN(x, msg) if (!(x)) { WARN(msg) }
-    #define ASSERT_WARNF(x, fmt, ...) if (!(x)) WARNF(fmt, __VA_ARGS__)
+    #define WARN(...) LOG("WARN", __FILE__, __LINE__, __VA_ARGS__)
+    #define ASSERT_WARN(x, ...) if (!(x)) WARN(__VA_ARGS__)
 #else
-    #define WARN(msg)
-    #define WARNF(fmt, ...)
-    #define ASSERT_WARN(x, msg)
-    #define ASSERT_WARNF(x, fmt, ...)
+    #define WARN(...)
+    #define ASSERT_WARN(x, ...)
 #endif
 
 #if LOGLEVEL > 2
-    #define INFO(msg) LOG("INFO: ", msg)
-    #define INFOF(fmt, ...) LOGF("INFO: ", fmt, __VA_ARGS__)
+    #define INFO(...) LOG("INFO", __FILE__, __LINE__, __VA_ARGS__)
+    #define ASSERT_INFO(x, ...) if (!(x)) INFO(__VA_ARGS__)
 #else
-    #define INFO(msg)
-    #define INFOF(fmt, ...)
-#endif
-
-
-#ifdef DEBUG
-    #define ASSERT(x) if (!(x)) __asm__("int $3")
-    #define DEBUG_CHECK(x, msg) if (!(x)) WARN(msg)
-    #define DEBUG_CHECKF(x, fmt, ...) if (!(x)) WARNF(fmt, __VA_ARGS__)
-#else
-    #define ASSERT(x)
-    #define DEBUG_CHECK(x, msg)
-    #define DEBUG_CHECKF(x, fmt, ...)
+    #define INFO(...)
+    #define ASSERT_INFO(x, ...)
 #endif
