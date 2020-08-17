@@ -1,7 +1,7 @@
 
 #include "Texture.hpp"
 #include "opengl.hpp"
-#include "../vendor/stb_image.h"
+#include "stb/stb_image.h"
 
 Texture::Texture(const std::string& filepath)
     : rendererId(0), filepath(filepath), buffer(nullptr), width(0), height(0), bpp(0)

@@ -61,6 +61,6 @@
     "files.exclude": {
         ".vscode": true,
         "bin": true,
-        "libs": true
+        "libs": true,
     }
 }

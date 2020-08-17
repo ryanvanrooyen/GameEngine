@@ -6,14 +6,19 @@ LIB_GLAD = -L libs/glad -l glad
 HEADERS_GLAD = -I libs/glad/include
 LIB_GLFW = -L libs/glfw-3.3.2/lib -l glfw3
 HEADERS_GLFW = -I libs/glfw-3.3.2/include
+VENDOR_HEADERS = -I vendor
+
 FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit
 
-COMPILE = ${CC} $(CFLAGS) $(HEADERS_GLAD) $(HEADERS_GLFW)
+COMPILE = ${CC} $(CFLAGS) $(HEADERS_GLAD) $(HEADERS_GLFW) $(VENDOR_HEADERS)
 LINK = ${CC} $(CFLAGS) $(LIB_GLAD) $(LIB_GLFW) $(FRAMEWORKS)
 
-HEADER_FILES = $(wildcard source/**.h source/**.hpp source/**/*.h source/**/*.hpp)
-CPP_FILES = main.cpp $(wildcard source/**.cpp source/**/*.cpp)
-OBJECT_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(CPP_FILES))
+HEADER_FILES = $(shell find source -type f -name '*.h*')
+CPP_FILES = $(shell find source -type f -name '*.cpp')
+OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(CPP_FILES))
+
+VENDOR_CPP_FILES = $(shell find vendor -type f -name '*.cpp')
+VENDOR_OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(VENDOR_CPP_FILES))
 
 debug ?= 0
 loglevel ?= 0
@@ -32,13 +37,19 @@ EXECUTABLE = $(OUTDIR)/main
 
 main: $(EXECUTABLE) ;
 
-$(EXECUTABLE): $(OBJECT_FILES)
+$(EXECUTABLE): $(OBJ_FILES) $(VENDOR_OBJ_FILES)
 	# Linking $@
-	@$(LINK) -o $(EXECUTABLE) $(OBJECT_FILES)
+	@$(LINK) -o $(EXECUTABLE) $(OBJ_FILES) $(VENDOR_OBJ_FILES)
 	# Build Succeeded
 
-# Compile individual files:
-$(OUTDIR)/%.o: %.cpp $(HEADER_FILES)
+# Compile individual source files:
+$(OUTDIR)/source/%.o: source/%.cpp $(HEADER_FILES)
+	# Compiling $< -> $@
+	@mkdir -p $(@D)
+	@$(COMPILE) -c $< -o $@
+
+# Compile individual vendor files:
+$(OUTDIR)/vendor/%.o: vendor/%.cpp
 	# Compiling $< -> $@
 	@mkdir -p $(@D)
 	@$(COMPILE) -c $< -o $@

@@ -1,16 +1,18 @@
 
 #define GL_SILENCE_DEPRECATION
-#include "source/rendering/opengl.hpp"
+#include "rendering/opengl.hpp"
 #include <string>
 #include <signal.h>
-#include "source/logging.h"
-#include "source/rendering/Renderer.hpp"
-#include "source/rendering/Shader.hpp"
-#include "source/rendering/Texture.hpp"
-#include "source/rendering/VertexBuffer.hpp"
-#include "source/rendering/VertexBufferLayout.hpp"
-#include "source/rendering/IndexBuffer.hpp"
-#include "source/rendering/VertexArray.hpp"
+#include "logging.h"
+#include "rendering/Renderer.hpp"
+#include "rendering/Shader.hpp"
+#include "rendering/Texture.hpp"
+#include "rendering/VertexBuffer.hpp"
+#include "rendering/VertexBufferLayout.hpp"
+#include "rendering/IndexBuffer.hpp"
+#include "rendering/VertexArray.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 using std::string;
 
@@ -42,7 +44,8 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow* window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
+
     if (!window)
     {
         glfwTerminate();
@@ -64,10 +67,10 @@ int main()
     INFO("OpenGL Version %s", glGetString(GL_VERSION));
 
     float positions[] = {
-        -0.5f, -0.5f, 0.f, 0.f,
-         0.5f, -0.5f, 1.f, 0.f,
-         0.5f,  0.5f, 1.f, 1.f,
-        -0.5f,  0.5f, 0.f, 1.f,
+        100.f, 100.f, 0.f, 0.f,
+        200.f, 100.f, 1.f, 0.f,
+        200.f, 200.f, 1.f, 1.f,
+        100.f, 200.f, 0.f, 1.f,
     };
 
     VertexBuffer vertexBuffer(positions, 4 * 4 * sizeof(float));
@@ -90,9 +93,17 @@ int main()
 
     IndexBuffer indexBuffer(indicies, 6);
 
+    glm::mat4 proj = glm::ortho(0.f, 960.f, 0.f, 540.f, -1.f, 1.f);
+    glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(100, 0, 0));
+    glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(200, 200, 0));
+
+    glm::mat4 mvp = proj * view * model;
+
     Shader shader("shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
     shader.Compile();
     shader.Bind();
+
+    shader.SetUniformMat4f("u_MVP", mvp);
 
     Texture texture("resources/logo3.png");
     texture.Bind();
