@@ -6,6 +6,7 @@
 #include "source/logging.h"
 #include "source/rendering/Renderer.hpp"
 #include "source/rendering/Shader.hpp"
+#include "source/rendering/Texture.hpp"
 #include "source/rendering/VertexBuffer.hpp"
 #include "source/rendering/VertexBufferLayout.hpp"
 #include "source/rendering/IndexBuffer.hpp"
@@ -34,7 +35,7 @@ int main()
     if (!glfwInit())
         return -1;
 
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -63,16 +64,21 @@ int main()
     INFO("OpenGL Version %s", glGetString(GL_VERSION));
 
     float positions[] = {
-        -0.5f, -0.5f,
-         0.5f, -0.5f,
-         0.5f,  0.5f,
-        -0.5f,  0.5f,
+        -0.5f, -0.5f, 0.f, 0.f,
+         0.5f, -0.5f, 1.f, 0.f,
+         0.5f,  0.5f, 1.f, 1.f,
+        -0.5f,  0.5f, 0.f, 1.f,
     };
 
-    VertexBuffer vertexBuffer(positions, 4 * 2 * sizeof(float));
+    VertexBuffer vertexBuffer(positions, 4 * 4 * sizeof(float));
 
     VertexBufferLayout vertexLayout;
-    vertexLayout.Push<float>(2);
+    vertexLayout.Push<float>(2); // 2D Position
+    vertexLayout.Push<float>(2); // 2D Texture Position
+
+    // Enable alpha blending:
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
     VertexArray va;
     va.AddBuffer(vertexBuffer, vertexLayout);
@@ -88,6 +94,10 @@ int main()
     shader.Compile();
     shader.Bind();
 
+    Texture texture("resources/logo3.png");
+    texture.Bind();
+    shader.SetUniform1i("u_Texture", 0);
+
     Renderer renderer;
 
     float redColor = 0.0f;
@@ -102,8 +112,8 @@ int main()
 
         renderer.Clear();
 
-        shader.Bind();
-        shader.SetUniform4f("u_Color", redColor, 0.3f, 0.8f, 1.f);
+        // shader.Bind();
+        // shader.SetUniform4f("u_Color", redColor, 0.3f, 0.8f, 1.f);
 
         renderer.Draw(va, indexBuffer, shader);
 

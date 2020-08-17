@@ -65,13 +65,31 @@ int Shader::GetUniformLocation(const std::string& name)
     return uniformLocation;
 }
 
-void Shader::SetUniform4f(const string& name, float v0, float v1, float v2, float v3)
+void Shader::SetUniform4f(const string& name, float v1, float v2, float v3, float v4)
 {
     if (!rendererId)
     {
         return;
     }
-    GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
+    GLCall(glUniform4f(GetUniformLocation(name), v1, v2, v3, v4));
+}
+
+void Shader::SetUniform1f(const string& name, float v1)
+{
+    if (!rendererId)
+    {
+        return;
+    }
+    GLCall(glUniform1f(GetUniformLocation(name), v1));
+}
+
+void Shader::SetUniform1i(const string& name, int v1)
+{
+    if (!rendererId)
+    {
+        return;
+    }
+    GLCall(glUniform1i(GetUniformLocation(name), v1));
 }
 
 static string readFile(const string& filepath) {
@@ -98,7 +116,7 @@ static unsigned int compileShaderFile(unsigned int type, const string& filepath)
         GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
         char* message = (char*)alloca(length * sizeof(char));
         GLCall(glGetShaderInfoLog(id, length, &length, message));
-        WARN("Failed to compile %s shader: %s", GL_VERTEX_SHADER ? "vertex" : "fragment", message);
+        ERROR("Failed to compile shader: %s: %s", filepath.c_str(), message);
         GLCall(glDeleteShader(id));
         return 0;
     }
