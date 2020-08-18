@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/libs/glad/include",
                 "${workspaceFolder}/libs/glfw-3.3.2/include",
-                "${workspaceFolder}/vendor"
+                "${workspaceFolder}/vendor/glm",
+                "${workspaceFolder}/vendor/stb"
             ],
             "defines": [],
             "macFrameworkPath": [],

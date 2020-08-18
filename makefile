@@ -6,7 +6,7 @@ LIB_GLAD = -L libs/glad -l glad
 HEADERS_GLAD = -I libs/glad/include
 LIB_GLFW = -L libs/glfw-3.3.2/lib -l glfw3
 HEADERS_GLFW = -I libs/glfw-3.3.2/include
-VENDOR_HEADERS = -I vendor
+VENDOR_HEADERS = -I vendor/glm -I vendor/stb
 
 FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit
 
@@ -17,7 +17,8 @@ HEADER_FILES = $(shell find source -type f -name '*.h*')
 CPP_FILES = $(shell find source -type f -name '*.cpp')
 OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(CPP_FILES))
 
-VENDOR_CPP_FILES = $(shell find vendor -type f -name '*.cpp')
+VENDOR_CPP_FILES = $(shell find vendor/stb -type f -name '*.cpp')
+# VENDOR_CPP_FILES += $(shell find vendor/ -type f -name '*.cpp')
 VENDOR_OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(VENDOR_CPP_FILES))
 
 debug ?= 0
