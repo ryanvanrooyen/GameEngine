@@ -2,6 +2,7 @@
 bin
 libs
 resources
+vendor_old
 .DS_Store
 
 # Prerequisites
