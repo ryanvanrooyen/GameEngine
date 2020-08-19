@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/vendor/glad",
                 "${workspaceFolder}/vendor/glfw",
+                "${workspaceFolder}/vendor/imgui",
                 "${workspaceFolder}/vendor/glm",
                 "${workspaceFolder}/vendor/stb"
             ],

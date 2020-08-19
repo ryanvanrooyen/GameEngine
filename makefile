@@ -2,7 +2,7 @@
 CC = g++
 CFLAGS = --std=c++11 -Wall
 
-VENDOR_HEADERS = -I vendor/glfw/include -I vendor/glad -I vendor/glm -I vendor/stb
+VENDOR_HEADERS = -I vendor/glfw/include -I vendor/glad -I vendor/imgui -I vendor/glm -I vendor/stb
 VENDOR_LIBS = -L vendor/glfw/build -l glfw3 -L vendor/glad -l glad
 
 FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit
@@ -15,7 +15,7 @@ CPP_FILES = $(shell find source -type f -name '*.cpp')
 OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(CPP_FILES))
 
 VENDOR_CPP_FILES = $(shell find vendor/stb -type f -name '*.cpp')
-# VENDOR_CPP_FILES += $(shell find vendor/glad -type f -name '*.cpp')
+VENDOR_CPP_FILES += $(shell find vendor/imgui -type f -name '*.cpp')
 VENDOR_OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(VENDOR_CPP_FILES))
 
 debug ?= 0
