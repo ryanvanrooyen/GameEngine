@@ -2,23 +2,20 @@
 CC = g++
 CFLAGS = --std=c++11 -Wall
 
-LIB_GLAD = -L libs/glad -l glad
-HEADERS_GLAD = -I libs/glad/include
-LIB_GLFW = -L libs/glfw-3.3.2/lib -l glfw3
-HEADERS_GLFW = -I libs/glfw-3.3.2/include
-VENDOR_HEADERS = -I vendor/glm -I vendor/stb
+VENDOR_HEADERS = -I vendor/glfw/include -I vendor/glad -I vendor/glm -I vendor/stb
+VENDOR_LIBS = -L vendor/glfw/build -l glfw3 -L vendor/glad -l glad
 
 FRAMEWORKS = -framework Cocoa -framework OpenGL -framework IOKit
 
-COMPILE = ${CC} $(CFLAGS) $(HEADERS_GLAD) $(HEADERS_GLFW) $(VENDOR_HEADERS)
-LINK = ${CC} $(CFLAGS) $(LIB_GLAD) $(LIB_GLFW) $(FRAMEWORKS)
+COMPILE = ${CC} $(CFLAGS) $(VENDOR_HEADERS)
+LINK = ${CC} $(CFLAGS) $(VENDOR_LIBS) $(FRAMEWORKS)
 
 HEADER_FILES = $(shell find source -type f -name '*.h*')
 CPP_FILES = $(shell find source -type f -name '*.cpp')
 OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(CPP_FILES))
 
 VENDOR_CPP_FILES = $(shell find vendor/stb -type f -name '*.cpp')
-# VENDOR_CPP_FILES += $(shell find vendor/ -type f -name '*.cpp')
+# VENDOR_CPP_FILES += $(shell find vendor/glad -type f -name '*.cpp')
 VENDOR_OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(VENDOR_CPP_FILES))
 
 debug ?= 0
@@ -54,9 +51,6 @@ $(OUTDIR)/vendor/%.o: vendor/%.cpp
 	# Compiling $< -> $@
 	@mkdir -p $(@D)
 	@$(COMPILE) -c $< -o $@
-
-mk_dir:
-	mkdir -p $(OUTDIR)
 
 # tests: behavior_tree.hpp $(wildcard tests/*.*pp)
 # 	$(CC) $(CFLAGS) tests/tests.cpp -o tests/tests
