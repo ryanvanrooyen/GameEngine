@@ -3,6 +3,7 @@ bin
 libs
 resources
 
+imgui.ini
 .DS_Store
 
 # Prerequisites

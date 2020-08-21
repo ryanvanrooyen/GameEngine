@@ -12,6 +12,7 @@ LINK = ${CC} $(CFLAGS) $(VENDOR_LIBS) $(FRAMEWORKS)
 
 HEADER_FILES = $(shell find source -type f -name '*.h*')
 CPP_FILES = $(shell find source -type f -name '*.cpp')
+CPP_FILES += $(shell find tests -type f -name '*.cpp')
 OBJ_FILES = $(patsubst %.cpp,$(OUTDIR)/%.o, $(CPP_FILES))
 
 VENDOR_CPP_FILES = $(shell find vendor/stb -type f -name '*.cpp')
@@ -42,6 +43,12 @@ $(EXECUTABLE): $(OBJ_FILES) $(VENDOR_OBJ_FILES)
 
 # Compile individual source files:
 $(OUTDIR)/source/%.o: source/%.cpp $(HEADER_FILES)
+	# Compiling $< -> $@
+	@mkdir -p $(@D)
+	@$(COMPILE) -c $< -o $@
+
+# Compile individual test files:
+$(OUTDIR)/tests/%.o: tests/%.cpp $(HEADER_FILES)
 	# Compiling $< -> $@
 	@mkdir -p $(@D)
 	@$(COMPILE) -c $< -o $@

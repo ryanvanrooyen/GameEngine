@@ -2,11 +2,23 @@
 #include "VertexBuffer.hpp"
 #include "opengl.hpp"
 
-VertexBuffer::VertexBuffer(const void* data, unsigned int size)
+VertexBuffer::VertexBuffer() : size(0)
+{
+    GLCall(glGenBuffers(1, &rendererId));
+}
+
+VertexBuffer::VertexBuffer(const void* data, unsigned int size) : size(size)
 {
     GLCall(glGenBuffers(1, &rendererId));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, rendererId));
     GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
+}
+
+void VertexBuffer::SetData(const void* data, unsigned int size)
+{
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, rendererId));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
+    this->size = size;
 }
 
 VertexBuffer::~VertexBuffer()
