@@ -32,7 +32,8 @@ void TestMenu::OnGuiRender()
     if (test)
     {
         test->OnGuiRender();
-        if (ImGui::Button("Back"))
+        ImGui::NewLine();
+        if (ImGui::Button("Back##TestMenuBackParent"))
         {
             delete test;
             test = nullptr;
@@ -46,9 +47,10 @@ void TestMenu::OnGuiRender()
             test = new TestSingleImage();
         if (ImGui::Button("Multi Image Texture"))
             test = new TestMultiImages();
+        ImGui::NewLine();
     }
 
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::Text("%.1f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
     ImGui::End();
 }
 

@@ -57,7 +57,11 @@ void TestSingleImage::OnRender(const Renderer& renderer)
 
 void TestSingleImage::OnGuiRender()
 {
-    ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);
+    ImGui::PushItemWidth(-1);
+    ImGui::TextUnformatted("Position:");
+    ImGui::SliderFloat("##X", &translation.x, 0.f, 960.f, "X: %.0f");
+    ImGui::SliderFloat("##Y", &translation.y, 0.f, 540.f, "Y: %.0f");
+    ImGui::PopItemWidth();
 }
 
 }

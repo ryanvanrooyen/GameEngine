@@ -25,7 +25,8 @@ private:
 
     glm::mat4 proj;
     glm::mat4 view;
-    glm::vec3 translation;
+    glm::vec3 translation1;
+    glm::vec3 translation2;
 
 public:
     TestMultiImages();
