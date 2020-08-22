@@ -29,8 +29,8 @@ TestMultiImages::TestMultiImages()
 
     vertexBuffer.SetData(positions, 4 * 4 * sizeof(float));
 
-    vertexLayout.Push<float>(2); // 2D Position
-    vertexLayout.Push<float>(2); // 2D Texture Position
+    vertexLayout.PushFloat(2); // 2D Position
+    vertexLayout.PushFloat(2); // 2D Texture Position
 
     vertexArray.AddBuffer(vertexBuffer, vertexLayout);
 
@@ -57,10 +57,7 @@ void TestMultiImages::OnRender(const Renderer& renderer)
 
 void TestMultiImages::OnGuiRender()
 {
-    ImGui::Begin("Test");
     ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::End();
 }
 
 }

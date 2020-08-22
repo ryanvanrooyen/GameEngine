@@ -1,17 +1,12 @@
 
 #define GL_SILENCE_DEPRECATION
-#include "rendering/opengl.hpp"
-#include <string>
-#include <signal.h>
 #include "logging.h"
+#include "rendering/opengl.hpp"
 #include "rendering/Renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "../tests/TestColorChangingSquare.hpp"
-#include "../tests/TestSingleImage.hpp"
-#include "../tests/TestMultiImages.hpp"
+#include "../tests/TestMenu.hpp"
 
-using std::string;
 using namespace test;
 
 
@@ -25,6 +20,47 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+}
+
+
+static void InitIMGui(GLFWwindow* window)
+{
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    ImGuiStyle& style = ImGui::GetStyle();
+    io.FontGlobalScale = 1.3f;
+    style.ScaleAllSizes(1.3f);
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    // ImGui::StyleColorsClassic();
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    const char* glsl_version = "#version 150";
+    ImGui_ImplOpenGL3_Init(glsl_version);
+}
+
+
+static void DestroyIMGui()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
+
+
+static void RenderIMGui(Test& test)
+{
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    test.OnGuiRender();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 
@@ -61,29 +97,16 @@ int main()
     }
 
     INFO("OpenGL Version %s", glGetString(GL_VERSION));
-
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    // ImGui::StyleColorsClassic();
-    // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    const char* glsl_version = "#version 150";
-    ImGui_ImplOpenGL3_Init(glsl_version);
-
     // Enable alpha blending:
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
+    InitIMGui(window);
+
     Renderer renderer;
     // Test* test = new TestColorChangingSquare();
     // Test* test = new TestSingleImage();
-    Test* test = new TestMultiImages();
+    Test* test = new TestMenu();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -98,13 +121,7 @@ int main()
 
         renderer.Clear();
 
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        test->OnGuiRender();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        RenderIMGui(*test);
 
         test->OnRender(renderer);
 
@@ -114,11 +131,7 @@ int main()
 
     delete test;
 
-    // Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
+    DestroyIMGui();
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
