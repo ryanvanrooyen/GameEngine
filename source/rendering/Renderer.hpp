@@ -5,22 +5,14 @@
 #include "IndexBuffer.hpp"
 #include "Shader.hpp"
 
-struct GLFWwindow;
 
 class Renderer
 {
-private:
-    GLFWwindow* window;
-    Renderer(GLFWwindow* window);
-    friend class Engine;
-
 public:
     // Standard drawing commands:
-    void Clear() const;
-    void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
-    void SwapBuffers();
+    static void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader);
 
     // GUI drawing commands:
-    void BeginGUI();
-    void EndGUI();
+    static void BeginGUI();
+    static void EndGUI();
 };

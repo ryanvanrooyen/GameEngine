@@ -1,5 +1,6 @@
 
 #include "Engine.hpp"
+#include "rendering/Renderer.hpp"
 #include "../tests/TestMenu.hpp"
 
 
@@ -7,25 +8,23 @@ int main()
 {
     Engine engine;
 
-    Renderer* rendererPtr = engine.Init();
-    if (!rendererPtr)
+    if (!engine.Init())
         return 1;
 
-    Renderer& renderer = *rendererPtr;
     test::TestMenu test;
 
     while (engine.IsRunning())
     {
         engine.CheckInput();
+        engine.ClearScreen();
 
-        renderer.Clear();
-        renderer.BeginGUI();
+        Renderer::BeginGUI();
         test.OnGuiRender();
-        renderer.EndGUI();
+        Renderer::EndGUI();
 
-        test.OnRender(renderer);
+        test.OnRender();
 
-        renderer.SwapBuffers();
+        engine.SwapBuffers();
     }
 
     return 0;

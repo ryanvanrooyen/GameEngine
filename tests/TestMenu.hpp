@@ -12,7 +12,7 @@ public:
     ~TestMenu();
 
     void OnGuiRender() override;
-    void OnRender(const Renderer& renderer) override;
+    void OnRender() override;
 };
 
 }

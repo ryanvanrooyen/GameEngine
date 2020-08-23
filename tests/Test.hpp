@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "../source/rendering/Renderer.hpp"
 
 namespace test
 {
@@ -14,7 +13,7 @@ public:
 
     virtual void OnUpdate(float deltaTime) {}
     virtual void OnGuiRender() {}
-    virtual void OnRender(const Renderer& renderer) {}
+    virtual void OnRender() {}
 };
 
 }

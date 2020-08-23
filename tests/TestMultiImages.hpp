@@ -6,7 +6,6 @@
 #include "../source/rendering/VertexBufferLayout.hpp"
 #include "../source/rendering/VertexArray.hpp"
 #include "../source/rendering/IndexBuffer.hpp"
-#include "../source/rendering/Renderer.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -33,7 +32,7 @@ public:
     ~TestMultiImages() {}
 
     void OnGuiRender() override;
-    void OnRender(const Renderer& renderer) override;
+    void OnRender() override;
 };
 
 }

@@ -4,16 +4,10 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "logging.h"
-#include "rendering/Renderer.hpp"
 
 
 Engine::~Engine()
 {
-    if (renderer)
-    {
-        delete renderer;
-    }
-
     if (window)
     {
         ImGui_ImplOpenGL3_Shutdown();
@@ -59,15 +53,12 @@ static void InitIMGui(GLFWwindow* window)
 }
 
 
-Renderer* Engine::Init()
+bool Engine::Init()
 {
-    if (renderer)
-        return renderer;
-
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
-        return nullptr;
+        return false;
 
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -79,7 +70,7 @@ Renderer* Engine::Init()
     window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
 
     if (!window)
-        return nullptr;
+        return false;
 
     glfwSetKeyCallback(window, key_callback);
     glfwMakeContextCurrent(window);
@@ -88,7 +79,7 @@ Renderer* Engine::Init()
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
         ERROR("Failed to initialize OpenGL context");
-        return nullptr;
+        return false;
     }
 
     INFO("OpenGL Version %s", glGetString(GL_VERSION));
@@ -97,8 +88,7 @@ Renderer* Engine::Init()
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
     InitIMGui(window);
-    renderer = new Renderer(window);
-    return renderer;
+    return true;
 }
 
 
@@ -117,4 +107,16 @@ void Engine::CheckInput()
     // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
     glfwPollEvents();
     // glfwWaitEvents();
+}
+
+
+void Engine::ClearScreen()
+{
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
+}
+
+
+void Engine::SwapBuffers()
+{
+    glfwSwapBuffers(window);
 }

@@ -40,7 +40,7 @@ TestColorChangingSquare::TestColorChangingSquare()
 }
 
 
-void TestColorChangingSquare::OnRender(const Renderer& renderer)
+void TestColorChangingSquare::OnRender()
 {
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
@@ -53,7 +53,7 @@ void TestColorChangingSquare::OnRender(const Renderer& renderer)
     shader.SetUniformMat4f("u_MVP", mvp);
     shader.SetUniform4f("u_Color", redColor, 0.3f, 0.8f, 1.f);
 
-    renderer.Draw(vertexArray, indexBuffer, shader);
+    Renderer::Draw(vertexArray, indexBuffer, shader);
 }
 
 

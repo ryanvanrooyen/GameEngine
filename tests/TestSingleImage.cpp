@@ -43,7 +43,7 @@ TestSingleImage::TestSingleImage()
 }
 
 
-void TestSingleImage::OnRender(const Renderer& renderer)
+void TestSingleImage::OnRender()
 {
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
@@ -51,7 +51,7 @@ void TestSingleImage::OnRender(const Renderer& renderer)
     shader.Bind();
     shader.SetUniformMat4f("u_MVP", mvp);
 
-    renderer.Draw(vertexArray, indexBuffer, shader);
+    Renderer::Draw(vertexArray, indexBuffer, shader);
 }
 
 

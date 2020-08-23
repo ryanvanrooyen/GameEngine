@@ -44,7 +44,7 @@ TestMultiImages::TestMultiImages()
 }
 
 
-void TestMultiImages::OnRender(const Renderer& renderer)
+void TestMultiImages::OnRender()
 {
     glm::mat4 model1 = glm::translate(glm::mat4(1.f), translation1);
     glm::mat4 mvp1 = proj * view * model1;
@@ -54,11 +54,11 @@ void TestMultiImages::OnRender(const Renderer& renderer)
 
     shader.Bind();
     shader.SetUniformMat4f("u_MVP", mvp1);
-    renderer.Draw(vertexArray, indexBuffer, shader);
+    Renderer::Draw(vertexArray, indexBuffer, shader);
 
     shader.Bind();
     shader.SetUniformMat4f("u_MVP", mvp2);
-    renderer.Draw(vertexArray, indexBuffer, shader);
+    Renderer::Draw(vertexArray, indexBuffer, shader);
 }
 
 

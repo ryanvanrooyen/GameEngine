@@ -17,10 +17,10 @@ TestMenu::~TestMenu()
 }
 
 
-void TestMenu::OnRender(const Renderer& renderer)
+void TestMenu::OnRender()
 {
     if (test)
-        test->OnRender(renderer);
+        test->OnRender();
 }
 
 
