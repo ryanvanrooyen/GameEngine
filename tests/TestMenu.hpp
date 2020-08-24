@@ -1,18 +1,19 @@
 
-#include "Test.hpp"
+#include "../source/core/Layer.hpp"
 
 namespace test
 {
 
-class TestMenu : public Test
+class TestMenu : public Layer
 {
-private:
-    Test* test = nullptr;
 public:
+    const char* LayerName() const override { return "TestMenu"; }
+    void OnUpdate(float deltaTime) override;
+    void OnGuiRender() override;
     ~TestMenu();
 
-    void OnGuiRender() override;
-    void OnRender() override;
+private:
+    Layer* test = nullptr;
 };
 
 }

@@ -1,5 +1,5 @@
 
-#include "Test.hpp"
+#include "../source/core/Layer.hpp"
 #include "../source/rendering/Shader.hpp"
 #include "../source/rendering/Texture.hpp"
 #include "../source/rendering/VertexBuffer.hpp"
@@ -12,8 +12,15 @@
 namespace test
 {
 
-class TestSingleImage : public Test
+class TestSingleImage : public Layer
 {
+public:
+    TestSingleImage();
+    const char* LayerName() const override { return "Single Texture"; }
+    void OnUpdate(float deltaTime) override;
+    void OnGuiRender() override;
+    ~TestSingleImage() {}
+
 private:
     Shader shader;
     Texture texture;
@@ -25,13 +32,6 @@ private:
     glm::mat4 proj;
     glm::mat4 view;
     glm::vec3 translation;
-
-public:
-    TestSingleImage();
-    ~TestSingleImage() {}
-
-    void OnGuiRender() override;
-    void OnRender() override;
 };
 
 }

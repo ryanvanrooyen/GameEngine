@@ -1,13 +1,62 @@
 
+#include <exception>
 #include "Engine.hpp"
-#include "rendering/opengl.hpp"
+#include "../rendering/opengl.hpp"
+#include "../rendering/Renderer.hpp"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "logging.h"
+#include "../core/logging.h"
+
+
+int Engine::Run()
+{
+    try
+    {
+        if (!Init())
+            return 1;
+
+        while (IsRunning())
+        {
+            CheckInput();
+            ClearScreen();
+
+            for (Layer* layer : layers)
+                layer->OnUpdate(0.f);
+
+            Renderer::BeginGUI();
+            for (Layer* layer : layers)
+                layer->OnGuiRender();
+            Renderer::EndGUI();
+
+            SwapBuffers();
+        }
+    }
+    catch (const std::exception& exc)
+    {
+        ERROR("Exception occured: %s", exc.what());
+        return 2;
+    }
+    catch (...)
+    {
+        return 3;
+    }
+
+    return 0;
+}
+
+
+void Engine::PushLayer(Layer* layer)
+{
+    if (layer)
+        layers.push_back(layer);
+}
 
 
 Engine::~Engine()
 {
+    for (Layer* layer : layers)
+        delete layer;
+
     if (window)
     {
         ImGui_ImplOpenGL3_Shutdown();

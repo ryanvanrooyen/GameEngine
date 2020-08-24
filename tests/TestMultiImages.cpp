@@ -44,7 +44,7 @@ TestMultiImages::TestMultiImages()
 }
 
 
-void TestMultiImages::OnRender()
+void TestMultiImages::OnUpdate(float deltaTime)
 {
     glm::mat4 model1 = glm::translate(glm::mat4(1.f), translation1);
     glm::mat4 mvp1 = proj * view * model1;

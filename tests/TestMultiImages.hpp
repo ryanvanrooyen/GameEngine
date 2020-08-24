@@ -1,5 +1,5 @@
 
-#include "Test.hpp"
+#include "../source/core/Layer.hpp"
 #include "../source/rendering/Shader.hpp"
 #include "../source/rendering/Texture.hpp"
 #include "../source/rendering/VertexBuffer.hpp"
@@ -12,8 +12,15 @@
 namespace test
 {
 
-class TestMultiImages : public Test
+class TestMultiImages : public Layer
 {
+public:
+    TestMultiImages();
+    const char* LayerName() const override { return "Duplicate Textures"; }
+    void OnUpdate(float deltaTime) override;
+    void OnGuiRender() override;
+    ~TestMultiImages() {}
+
 private:
     Shader shader;
     Texture texture;
@@ -26,13 +33,6 @@ private:
     glm::mat4 view;
     glm::vec3 translation1;
     glm::vec3 translation2;
-
-public:
-    TestMultiImages();
-    ~TestMultiImages() {}
-
-    void OnGuiRender() override;
-    void OnRender() override;
 };
 
 }

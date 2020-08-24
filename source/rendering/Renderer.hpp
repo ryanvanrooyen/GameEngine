@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "VertexArray.hpp"
-#include "IndexBuffer.hpp"
-#include "Shader.hpp"
+class VertexArray;
+class IndexBuffer;
+class Shader;
 
 
 class Renderer

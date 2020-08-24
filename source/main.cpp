@@ -1,31 +1,16 @@
 
-#include "Engine.hpp"
-#include "rendering/Renderer.hpp"
+#include "core/Engine.hpp"
 #include "../tests/TestMenu.hpp"
 
 
 int main()
 {
-    Engine engine;
+    Engine* engine = new Engine();
 
-    if (!engine.Init())
-        return 1;
+    engine->PushLayer(new test::TestMenu());
 
-    test::TestMenu test;
+    int returnCode = engine->Run();
+    delete engine;
 
-    while (engine.IsRunning())
-    {
-        engine.CheckInput();
-        engine.ClearScreen();
-
-        Renderer::BeginGUI();
-        test.OnGuiRender();
-        Renderer::EndGUI();
-
-        test.OnRender();
-
-        engine.SwapBuffers();
-    }
-
-    return 0;
+    return returnCode;
 }

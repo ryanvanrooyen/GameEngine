@@ -1,5 +1,5 @@
 
-#include "Test.hpp"
+#include "../source/core/Layer.hpp"
 #include "../source/rendering/Shader.hpp"
 #include "../source/rendering/Texture.hpp"
 #include "../source/rendering/VertexBuffer.hpp"
@@ -12,8 +12,15 @@
 namespace test
 {
 
-class TestColorChangingSquare : public Test
+class TestColorChangingSquare : public Layer
 {
+public:
+    TestColorChangingSquare();
+    const char* LayerName() const override { return "Color Changing Square"; }
+    void OnUpdate(float deltaTime) override;
+    void OnGuiRender() override;
+    ~TestColorChangingSquare() {}
+
 private:
     Shader shader;
     VertexBuffer vertexBuffer;
@@ -27,13 +34,6 @@ private:
     glm::mat4 proj;
     glm::mat4 view;
     glm::vec3 translation;
-
-public:
-    TestColorChangingSquare();
-    ~TestColorChangingSquare() {}
-
-    void OnGuiRender() override;
-    void OnRender() override;
 };
 
 }

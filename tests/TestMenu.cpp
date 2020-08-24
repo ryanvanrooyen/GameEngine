@@ -17,10 +17,10 @@ TestMenu::~TestMenu()
 }
 
 
-void TestMenu::OnRender()
+void TestMenu::OnUpdate(float deltaTime)
 {
     if (test)
-        test->OnRender();
+        test->OnUpdate(deltaTime);
 }
 
 
@@ -43,9 +43,9 @@ void TestMenu::OnGuiRender()
     {
         if (ImGui::Button("Color Changing Square"))
             test = new TestColorChangingSquare();
-        if (ImGui::Button("Single Image Texture"))
+        if (ImGui::Button("Single Texture"))
             test = new TestSingleImage();
-        if (ImGui::Button("Multi Image Texture"))
+        if (ImGui::Button("Duplicate Textures"))
             test = new TestMultiImages();
         ImGui::NewLine();
     }

@@ -43,7 +43,7 @@ TestSingleImage::TestSingleImage()
 }
 
 
-void TestSingleImage::OnRender()
+void TestSingleImage::OnUpdate(float deltaTime)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;

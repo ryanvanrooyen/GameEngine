@@ -1,20 +1,27 @@
 
 #pragma once
 
+#include <vector>
+#include "Layer.hpp"
+
 struct GLFWwindow;
 
 class Engine
 {
-private:
-    GLFWwindow* window = nullptr;
-
 public:
+    int Run();
+    void PushLayer(Layer* layer);
+
     ~Engine();
 
+private:
     bool Init();
     bool IsRunning();
     void CheckInput();
 
     void ClearScreen();
     void SwapBuffers();
+
+    GLFWwindow* window = nullptr;
+    std::vector<Layer*> layers;
 };

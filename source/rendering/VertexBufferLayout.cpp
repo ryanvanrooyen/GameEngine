@@ -1,6 +1,6 @@
 
 #include "VertexBufferLayout.hpp"
-#include "../logging.h"
+#include "../core/logging.h"
 #include "opengl.hpp"
 
 

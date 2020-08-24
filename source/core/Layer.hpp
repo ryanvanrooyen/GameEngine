@@ -1,19 +1,11 @@
 
 #pragma once
 
-
-namespace test
-{
-
-class Test
+class Layer
 {
 public:
-    Test() {}
-    virtual ~Test() {}
-
+    virtual const char* LayerName() const = 0;
     virtual void OnUpdate(float deltaTime) {}
     virtual void OnGuiRender() {}
-    virtual void OnRender() {}
+    virtual ~Layer() = default;
 };
-
-}
