@@ -3,6 +3,9 @@
 #include "opengl.hpp"
 #include "stb_image.h"
 
+namespace Game
+{
+
 Texture::Texture(const std::string& filepath)
     : rendererId(0), filepath(filepath), buffer(nullptr), width(0), height(0), bpp(0)
 {
@@ -38,4 +41,6 @@ void Texture::Bind(unsigned int slot) const
 void Texture::Unbind() const
 {
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
 }

@@ -3,6 +3,9 @@
 
 #include <string>
 
+namespace Game
+{
+
 class Texture
 {
 public:
@@ -21,3 +24,5 @@ private:
     unsigned char* buffer;
     int width, height, bpp;
 };
+
+}

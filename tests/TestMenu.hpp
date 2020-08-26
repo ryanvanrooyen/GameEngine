@@ -1,7 +1,7 @@
 
 #include "../source/core/Layer.hpp"
 
-namespace test
+namespace Game::Test
 {
 
 class TestMenu : public Layer

@@ -1,6 +1,9 @@
 
 #include "opengl.hpp"
 
+namespace Game
+{
+
 void GLClearErrors()
 {
     while (glGetError());
@@ -15,4 +18,6 @@ bool GLCheckErrors(const char * function, const char* file, int line)
         noErrors = false;
     }
     return noErrors;
+}
+
 }

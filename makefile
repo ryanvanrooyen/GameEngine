@@ -1,6 +1,6 @@
 
 CC = g++
-CFLAGS = --std=c++11 -Wall
+CFLAGS = --std=c++17 -Wall
 
 VENDOR_HEADERS = -I vendor/glfw/include -I vendor/glad -I vendor/imgui -I vendor/glm -I vendor/stb
 VENDOR_LIBS = -L vendor/glfw/build -l glfw3 -L vendor/glad -l glad

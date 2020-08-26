@@ -5,6 +5,9 @@
 #include <unordered_map>
 #include "glm/glm.hpp"
 
+namespace Game
+{
+
 class Shader
 {
 public:
@@ -28,3 +31,5 @@ private:
 
     int GetUniformLocation(const std::string& name);
 };
+
+}

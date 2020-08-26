@@ -7,6 +7,8 @@
 #include "imgui_impl_opengl3.h"
 #include "../core/logging.h"
 
+namespace Game
+{
 
 int Engine::Run()
 {
@@ -168,4 +170,6 @@ void Engine::ClearScreen()
 void Engine::SwapBuffers()
 {
     glfwSwapBuffers(window);
+}
+
 }

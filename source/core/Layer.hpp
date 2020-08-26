@@ -1,6 +1,9 @@
 
 #pragma once
 
+namespace Game
+{
+
 class Layer
 {
 public:
@@ -9,3 +12,5 @@ public:
     virtual void OnGuiRender() {}
     virtual ~Layer() = default;
 };
+
+}

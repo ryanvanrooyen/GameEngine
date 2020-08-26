@@ -2,6 +2,9 @@
 #include "IndexBuffer.hpp"
 #include "opengl.hpp"
 
+namespace Game
+{
+
 IndexBuffer::IndexBuffer() : count(0)
 {
     GLCall(glGenBuffers(1, &rendererId));
@@ -34,4 +37,6 @@ void IndexBuffer::Bind() const
 void IndexBuffer::Unbind() const
 {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+}
+
 }

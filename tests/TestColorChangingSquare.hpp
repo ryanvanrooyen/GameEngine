@@ -9,7 +9,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-namespace test
+
+namespace Game::Test
 {
 
 class TestColorChangingSquare : public Layer
@@ -19,8 +20,6 @@ public:
     const char* LayerName() const override { return "Color Changing Square"; }
     void OnUpdate(float deltaTime) override;
     void OnGuiRender() override;
-    ~TestColorChangingSquare() {}
-
 private:
     Shader shader;
     VertexBuffer vertexBuffer;

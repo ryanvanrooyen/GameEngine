@@ -1,6 +1,9 @@
 
 #pragma once
 
+namespace Game
+{
+
 class VertexBuffer
 {
 private:
@@ -18,3 +21,5 @@ public:
 
     unsigned int GetSize() const { return size; }
 };
+
+}

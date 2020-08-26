@@ -1,6 +1,9 @@
 
 #pragma once
 
+namespace Game
+{
+
 class IndexBuffer
 {
 private:
@@ -17,3 +20,5 @@ public:
 
     unsigned int GetCount() const { return count; }
 };
+
+}

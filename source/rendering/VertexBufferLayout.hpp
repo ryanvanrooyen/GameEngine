@@ -3,6 +3,9 @@
 
 #include <vector>
 
+namespace Game
+{
+
 struct VertexBufferElement
 {
     unsigned int Type;
@@ -26,3 +29,5 @@ public:
     const std::vector<VertexBufferElement> GetElements() const { return elements; }
     unsigned int GetStride() const { return stride; }
 };
+
+}

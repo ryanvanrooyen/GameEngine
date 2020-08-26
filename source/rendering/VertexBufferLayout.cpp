@@ -3,6 +3,8 @@
 #include "../core/logging.h"
 #include "opengl.hpp"
 
+namespace Game
+{
 
 unsigned int VertexBufferElement::GetSizeOfType(unsigned int type)
 {
@@ -27,3 +29,5 @@ void VertexBufferLayout::PushElement(unsigned int type, unsigned int count)
 void VertexBufferLayout::PushFloat(unsigned int count) { PushElement(GL_FLOAT, count); }
 void VertexBufferLayout::PushInt(unsigned int count) { PushElement(GL_UNSIGNED_INT, count); }
 void VertexBufferLayout::PushByte(unsigned int count) { PushElement(GL_UNSIGNED_BYTE, count); }
+
+}

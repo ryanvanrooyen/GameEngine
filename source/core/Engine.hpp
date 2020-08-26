@@ -6,12 +6,14 @@
 
 struct GLFWwindow;
 
+namespace Game
+{
+
 class Engine
 {
 public:
     int Run();
     void PushLayer(Layer* layer);
-
     ~Engine();
 
 private:
@@ -25,3 +27,5 @@ private:
     GLFWwindow* window = nullptr;
     std::vector<Layer*> layers;
 };
+
+}

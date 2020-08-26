@@ -4,8 +4,12 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-namespace test
+namespace Game::Test
 {
+
+static float width = 100.f;
+static float height = 100.f;
+
 
 TestColorChangingSquare::TestColorChangingSquare()
     : shader("shaders/vertexShader.glsl", "shaders/fragmentColorShader.glsl")
@@ -19,9 +23,9 @@ TestColorChangingSquare::TestColorChangingSquare()
 
     float positions[] = {
         0.f,   0.f, 0.f, 0.f,
-        100.f, 0.f, 1.f, 0.f,
-        100.f, 100.f, 1.f, 1.f,
-        0.f,   100.f, 0.f, 1.f,
+        width, 0.f, 1.f, 0.f,
+        width, height, 1.f, 1.f,
+        0.f,   height, 0.f, 1.f,
     };
 
     vertexBuffer.SetData(positions, 4 * 4 * sizeof(float));
@@ -59,7 +63,11 @@ void TestColorChangingSquare::OnUpdate(float deltaTime)
 
 void TestColorChangingSquare::OnGuiRender()
 {
-    ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);
+    ImGui::PushItemWidth(-1);
+    ImGui::TextUnformatted("Position:");
+    ImGui::SliderFloat("##X", &translation.x, 0.f, 960.f - width, "X: %.0f");
+    ImGui::SliderFloat("##Y", &translation.y, 0.f, 540.f - height, "Y: %.0f");
+    ImGui::PopItemWidth();
 }
 
 }

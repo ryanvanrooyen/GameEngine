@@ -2,6 +2,9 @@
 #include "VertexArray.hpp"
 #include "opengl.hpp"
 
+namespace Game
+{
+
 VertexArray::VertexArray()
 {
     GLCall(glGenVertexArrays(1, &rendererId));
@@ -40,4 +43,6 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
         GLCall(glVertexAttribPointer(i, element.Count, element.Type, normalized, layout.GetStride(), (const void*)offset));
         offset += element.Count * VertexBufferElement::GetSizeOfType(element.Type);
     }
+}
+
 }

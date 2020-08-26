@@ -4,6 +4,9 @@
 #include "VertexBuffer.hpp"
 #include "VertexBufferLayout.hpp"
 
+namespace Game
+{
+
 class VertexArray
 {
 private:
@@ -17,3 +20,5 @@ public:
     void Unbind() const;
     void AddBuffer(const VertexBuffer& vp, const VertexBufferLayout& layout);
 };
+
+}

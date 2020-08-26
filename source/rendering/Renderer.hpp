@@ -1,10 +1,12 @@
 
 #pragma once
 
+namespace Game
+{
+
 class VertexArray;
 class IndexBuffer;
 class Shader;
-
 
 class Renderer
 {
@@ -16,3 +18,4 @@ public:
     static void BeginGUI();
     static void EndGUI();
 };
+}

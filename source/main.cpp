@@ -5,9 +5,9 @@
 
 int main()
 {
-    Engine* engine = new Engine();
+    Game::Engine* engine = new Game::Engine();
 
-    engine->PushLayer(new test::TestMenu());
+    engine->PushLayer(new Game::Test::TestMenu());
 
     int returnCode = engine->Run();
     delete engine;

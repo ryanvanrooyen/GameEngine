@@ -6,6 +6,8 @@
 
 using std::string;
 
+namespace Game
+{
 
 Shader::Shader(const string& vertexShaderFilepath, const string& fragmentShaderFilepath)
     : rendererId(0), vertexShaderFilepath(vertexShaderFilepath), fragmentShaderFilepath(fragmentShaderFilepath) {}
@@ -195,3 +197,5 @@ bool Shader::Compile()
 
 //     return { shaders[0].str(), shaders[1].str() };
 // }
+
+}
