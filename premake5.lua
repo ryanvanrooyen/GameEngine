@@ -6,7 +6,7 @@ configuration "macosx"
 workspace "GameEngine"
 
     cppdialect "C++17"
-    configurations { "Debug", "Release" }
+    configurations { "Debug", "Release", "Dist" }
     flags "FatalWarnings"
     buildoptions { "-Wall" }
     includedirs { "vendor/glfw/include", "vendor/glad", "vendor/imgui", "vendor/glm", "vendor/stb" }
@@ -16,6 +16,7 @@ workspace "GameEngine"
     project "GameEngine"
         kind "WindowedApp"
         language "C++"
+        targetdir "bin/"
         files {
             "source/**.hpp",
             "source/**.h",
@@ -26,12 +27,14 @@ workspace "GameEngine"
             "vendor/stb/**.cpp",
         }
 
-        configuration "Debug"
-            defines { "DEBUG" }
-            symbols "On"
+    filter "configurations:Debug"
+        defines { "DEBUG" }
+        symbols "On"
 
-        configuration "Release"
-            defines { "NDEBUG" }
-            optimize "On"
+    filter "configurations:Release"
+        defines { "RELEASE" }
+        optimize "On"
 
-        targetdir "bin/"
+    filter "configurations:Dist"
+        defines { "DIST" }
+        optimize "On"

@@ -27,6 +27,8 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
+TARGETDIR = bin
+TARGET = $(TARGETDIR)/GameEngine.app
 INCLUDES += -Ivendor/glfw/include -Ivendor/glad -Ivendor/imgui -Ivendor/glm -Ivendor/stb
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -43,18 +45,20 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = bin/Debug
-TARGET = $(TARGETDIR)/GameEngine.app
 OBJDIR = obj/Debug
 DEFINES += -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Werror -g -Wall
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Werror -g -std=c++17 -Wall
 
 else ifeq ($(config),release)
-TARGETDIR = bin
-TARGET = $(TARGETDIR)/GameEngine.app
 OBJDIR = obj/Release
-DEFINES += -DNDEBUG
+DEFINES += -DRELEASE
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -Wall
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -std=c++17 -Wall
+
+else ifeq ($(config),dist)
+OBJDIR = obj/Dist
+DEFINES += -DDIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -Wall
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -std=c++17 -Wall
 

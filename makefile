@@ -14,6 +14,9 @@ ifeq ($(config),debug)
 else ifeq ($(config),release)
   GameEngine_config = release
 
+else ifeq ($(config),dist)
+  GameEngine_config = dist
+
 else
   $(error "invalid configuration $(config)")
 endif
@@ -39,6 +42,7 @@ help:
 	@echo "CONFIGURATIONS:"
 	@echo "  debug"
 	@echo "  release"
+	@echo "  dist"
 	@echo ""
 	@echo "TARGETS:"
 	@echo "   all (default)"
