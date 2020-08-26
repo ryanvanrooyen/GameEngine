@@ -7,6 +7,7 @@ workspace "GameEngine"
 
     cppdialect "C++17"
     configurations { "Debug", "Release", "Dist" }
+    architecture "x64"
     flags "FatalWarnings"
     buildoptions { "-Wall" }
     includedirs { "vendor/glfw/include", "vendor/glad", "vendor/imgui", "vendor/glm", "vendor/stb" }

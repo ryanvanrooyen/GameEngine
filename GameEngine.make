@@ -35,7 +35,7 @@ ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
 LIBS += -framework Cocoa -framework OpenGL -framework IOKit -lglfw3 -lglad
 LDDEPS +=
-ALL_LDFLAGS += $(LDFLAGS) -Lvendor/glfw/build -Lvendor/glad
+ALL_LDFLAGS += $(LDFLAGS) -Lvendor/glfw/build -Lvendor/glad -m64
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -47,20 +47,20 @@ endef
 ifeq ($(config),debug)
 OBJDIR = obj/Debug
 DEFINES += -DDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Werror -g -Wall
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Werror -g -std=c++17 -Wall
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -g -Wall
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -g -std=c++17 -Wall
 
 else ifeq ($(config),release)
 OBJDIR = obj/Release
 DEFINES += -DRELEASE
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -Wall
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -std=c++17 -Wall
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -Wall
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -std=c++17 -Wall
 
 else ifeq ($(config),dist)
 OBJDIR = obj/Dist
 DEFINES += -DDIST
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -Wall
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -Werror -O2 -std=c++17 -Wall
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -Wall
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -std=c++17 -Wall
 
 endif
 
