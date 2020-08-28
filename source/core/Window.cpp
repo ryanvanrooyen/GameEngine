@@ -31,11 +31,10 @@ void Window::Update(float deltaTime)
     for (Layer* layer : layers)
         layer->OnUpdate(deltaTime);
 
-    Renderer::BeginGUI();
-    MakeCurrent();
+    BeginGUI();
     for (Layer* layer : layers)
         layer->OnGUIRender(*this);
-    Renderer::EndGUI();
+    EndGUI();
 
     // SwapBuffers();
 }

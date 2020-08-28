@@ -23,6 +23,9 @@ namespace Game
         virtual void Clear() = 0;
         virtual void SwapBuffers() = 0;
 
+        virtual void BeginGUI() = 0;
+        virtual void EndGUI() = 0;
+
         void PushLayer(Layer* layer);
         void PopLayer(Layer* layer);
         void PushOverlay(Layer* overlay);

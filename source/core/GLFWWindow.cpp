@@ -1,11 +1,11 @@
 
 #include "GLFWWindow.hpp"
 #include "../rendering/opengl.hpp"
-#include "../rendering/Renderer.hpp"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "examples/imgui_impl_glfw.h"
+#include "examples/imgui_impl_opengl3.h"
 #include <functional>
 #include "../core/logging.h"
+
 
 namespace Game
 {
@@ -164,6 +164,21 @@ void GLFWWindow::PollInput()
     // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
     glfwPollEvents();
     // glfwWaitEvents();
+}
+
+
+void GLFWWindow::BeginGUI()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+
+void GLFWWindow::EndGUI()
+{
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 

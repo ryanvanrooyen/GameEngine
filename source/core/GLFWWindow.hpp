@@ -23,6 +23,9 @@ namespace Game
         virtual void Clear() override;
         virtual void SwapBuffers() override;
 
+        virtual void BeginGUI() override;
+        virtual void EndGUI() override;
+
         static GLFWWindow* Create(const std::string& name, GLFWWindow* parentWindow = nullptr);
 
     private:

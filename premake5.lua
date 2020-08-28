@@ -33,8 +33,10 @@ workspace "GameEngine"
             "source/**.cpp",
             "tests/**.hpp",
             "tests/**.cpp",
-            "vendor/imgui/**.cpp",
             "vendor/stb/**.cpp",
+            "vendor/imgui/*.cpp",
+            "vendor/imgui/examples/imgui_impl_glfw.cpp",
+            "vendor/imgui/examples/imgui_impl_opengl3.cpp",
         }
 
     filter "configurations:Debug"
