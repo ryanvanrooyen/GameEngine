@@ -36,7 +36,11 @@ namespace Game
 
         static Window* Create(const std::string& name, Window* parent = nullptr);
 
+        bool VSyncEnabled() { return vsync; }
+        virtual void SetVSyncEnabled(bool enabled) = 0;
+
     protected:
+        bool vsync = false;
         std::string name;
 
         void DispatchKeyPress(int key);

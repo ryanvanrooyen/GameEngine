@@ -112,6 +112,9 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     TRACE("Initializing ImGui Context");
     InitIMGui(windowHandle);
 
+
+    // Example on how to init 2 windows:
+
     // GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui OpenGL3 example", NULL, NULL);
     // glfwMakeContextCurrent(window);
     // gl3wInit();
@@ -130,17 +133,13 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     // // Setup ImGui binding
     // ImGui_ImplGlfwGL3_Init(window2, true);
 
-
-
-
-
     GLFWWindow* newWindow = new GLFWWindow(windowHandle, name);
     newWindow->imguiContext = imguiContext;
 
     glfwSetWindowUserPointer(windowHandle, newWindow);
     glfwSetKeyCallback(windowHandle, Event_KeyPress);
 
-    // glfwSwapInterval(1);  // V-Sync
+    newWindow->SetVSyncEnabled(true);
 
     windowCount++;
 
@@ -191,6 +190,13 @@ void GLFWWindow::Clear()
 void GLFWWindow::SwapBuffers()
 {
     glfwSwapBuffers(windowHandle);
+}
+
+
+void GLFWWindow::SetVSyncEnabled(bool enabled)
+{
+    vsync = enabled;
+    glfwSwapInterval(vsync ? 1 : 0);
 }
 
 

@@ -26,6 +26,8 @@ namespace Game
         virtual void BeginGUI() override;
         virtual void EndGUI() override;
 
+        virtual void SetVSyncEnabled(bool enabled) override;
+
         static GLFWWindow* Create(const std::string& name, GLFWWindow* parentWindow = nullptr);
 
     private:
