@@ -4,6 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/vendor/glad",
+                "${workspaceFolder}/vendor/spdlog/include",
                 "${workspaceFolder}/vendor/glfw/include",
                 "${workspaceFolder}/vendor/imgui",
                 "${workspaceFolder}/vendor/glm",

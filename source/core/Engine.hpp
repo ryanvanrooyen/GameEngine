@@ -1,31 +1,36 @@
 
 #pragma once
 
-#include <vector>
-#include "Layer.hpp"
+#include "../events/Listeners.hpp"
 
-struct GLFWwindow;
 
 namespace Game
 {
+    class Window;
+    class Layer;
 
-class Engine
-{
-public:
-    int Run();
-    void PushLayer(Layer* layer);
-    ~Engine();
+    class Engine : public EventListener
+    {
+    public:
+        Engine();
 
-private:
-    bool Init();
-    bool IsRunning();
-    void CheckInput();
+        void PushLayer(Layer* layer);
+        void PopLayer(Layer* layer);
+        void PushOverlay(Layer* overlay);
+        void PopOverlay(Layer* overlay);
 
-    void ClearScreen();
-    void SwapBuffers();
+        int Run();
+        bool IsRunning() { return isRunning; }
+        void Quit();
 
-    GLFWwindow* window = nullptr;
-    std::vector<Layer*> layers;
-};
+        // Events:
+        bool OnKeyPress(Window& window, int key) override;
+
+        virtual ~Engine();
+
+    private:
+        Window* mainWindow;
+        bool isRunning = false;
+    };
 
 }

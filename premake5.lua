@@ -8,10 +8,19 @@ workspace "GameEngine"
     cppdialect "C++17"
     configurations { "Debug", "Release", "Dist" }
     architecture "x64"
-    flags "FatalWarnings"
     buildoptions { "-Wall" }
-    includedirs { "vendor/glfw/include", "vendor/glad", "vendor/imgui", "vendor/glm", "vendor/stb" }
-    libdirs { "vendor/glfw/build", "vendor/glad" }
+    includedirs {
+        "vendor/spdlog/include",
+        "vendor/glfw/include",
+        "vendor/glad",
+        "vendor/imgui",
+        "vendor/glm",
+        "vendor/stb"
+    }
+    libdirs {
+        "vendor/glfw/build",
+        "vendor/glad"
+    }
     links { "glfw3", "glad" }
 
     project "GameEngine"
@@ -34,8 +43,10 @@ workspace "GameEngine"
 
     filter "configurations:Release"
         defines { "RELEASE" }
+        flags "FatalWarnings"
         optimize "On"
 
     filter "configurations:Dist"
         defines { "DIST" }
+        flags "FatalWarnings"
         optimize "On"

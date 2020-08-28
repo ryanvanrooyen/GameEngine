@@ -19,7 +19,7 @@
         {
             "label": "Debug",
             "type": "shell",
-            "command": "make loglevel=3 debug=1 --silent",
+            "command": "make config=debug",
             "presentation": {
                 "echo": false,
                 "reveal": "never",

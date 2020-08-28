@@ -1,8 +1,8 @@
 
 #include "TestMultiImages.hpp"
 #include "../source/rendering/Renderer.hpp"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "imgui.h"
+
 
 namespace Game::Test
 {
@@ -66,7 +66,7 @@ void TestMultiImages::OnUpdate(float deltaTime)
 }
 
 
-void TestMultiImages::OnGuiRender()
+void TestMultiImages::OnGUIRender(Window& window)
 {
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position 1:");

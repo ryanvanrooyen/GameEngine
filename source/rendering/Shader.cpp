@@ -58,12 +58,12 @@ int Shader::GetUniformLocation(const std::string& name)
     }
     else
     {
-        INFO("Getting uniform location for \"%s\"", nameStr);
+        TRACE("Getting uniform location for \"{}\"", nameStr);
         GLCall(uniformLocation = glGetUniformLocation(rendererId, nameStr));
         uniformCache[name] = uniformLocation;
     }
 
-    ASSERT_WARN(uniformLocation != -1, "Uniform \"%s\" not found", nameStr);
+    ASSERT_WARN(uniformLocation != -1, "Uniform \"{}\" not found", nameStr);
     return uniformLocation;
 }
 
@@ -127,7 +127,7 @@ static unsigned int compileShaderFile(unsigned int type, const string& filepath)
         GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
         char* message = (char*)alloca(length * sizeof(char));
         GLCall(glGetShaderInfoLog(id, length, &length, message));
-        ERROR("Failed to compile shader: %s: %s", filepath.c_str(), message);
+        ERROR("Failed to compile shader: {}: {}", filepath.c_str(), message);
         GLCall(glDeleteShader(id));
         return 0;
     }

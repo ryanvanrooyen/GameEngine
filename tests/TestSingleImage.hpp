@@ -18,7 +18,7 @@ public:
     TestSingleImage();
     const char* LayerName() const override { return "Single Texture"; }
     void OnUpdate(float deltaTime) override;
-    void OnGuiRender() override;
+    void OnGUIRender(Window& window) override;
     ~TestSingleImage() {}
 
 private:

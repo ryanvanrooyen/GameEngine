@@ -29,7 +29,7 @@ ifeq ($(origin AR), default)
 endif
 TARGETDIR = bin
 TARGET = $(TARGETDIR)/GameEngine.app
-INCLUDES += -Ivendor/glfw/include -Ivendor/glad -Ivendor/imgui -Ivendor/glm -Ivendor/stb
+INCLUDES += -Ivendor/spdlog/include -Ivendor/glfw/include -Ivendor/glad -Ivendor/imgui -Ivendor/glm -Ivendor/stb
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -47,8 +47,8 @@ endef
 ifeq ($(config),debug)
 OBJDIR = obj/Debug
 DEFINES += -DDEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -g -Wall
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -g -std=c++17 -Wall
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -Wall
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17 -Wall
 
 else ifeq ($(config),release)
 OBJDIR = obj/Release
@@ -75,17 +75,20 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/Engine.o
+GENERATED += $(OBJDIR)/GLFWWindow.o
 GENERATED += $(OBJDIR)/IndexBuffer.o
 GENERATED += $(OBJDIR)/Renderer.o
 GENERATED += $(OBJDIR)/Shader.o
 GENERATED += $(OBJDIR)/TestColorChangingSquare.o
 GENERATED += $(OBJDIR)/TestMenu.o
 GENERATED += $(OBJDIR)/TestMultiImages.o
+GENERATED += $(OBJDIR)/TestSecondaryWindow.o
 GENERATED += $(OBJDIR)/TestSingleImage.o
 GENERATED += $(OBJDIR)/Texture.o
 GENERATED += $(OBJDIR)/VertexArray.o
 GENERATED += $(OBJDIR)/VertexBuffer.o
 GENERATED += $(OBJDIR)/VertexBufferLayout.o
+GENERATED += $(OBJDIR)/Window.o
 GENERATED += $(OBJDIR)/imgui.o
 GENERATED += $(OBJDIR)/imgui_demo.o
 GENERATED += $(OBJDIR)/imgui_draw.o
@@ -93,20 +96,22 @@ GENERATED += $(OBJDIR)/imgui_impl_glfw.o
 GENERATED += $(OBJDIR)/imgui_impl_opengl3.o
 GENERATED += $(OBJDIR)/imgui_widgets.o
 GENERATED += $(OBJDIR)/main.o
-GENERATED += $(OBJDIR)/opengl.o
 GENERATED += $(OBJDIR)/stb_image.o
 OBJECTS += $(OBJDIR)/Engine.o
+OBJECTS += $(OBJDIR)/GLFWWindow.o
 OBJECTS += $(OBJDIR)/IndexBuffer.o
 OBJECTS += $(OBJDIR)/Renderer.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/TestColorChangingSquare.o
 OBJECTS += $(OBJDIR)/TestMenu.o
 OBJECTS += $(OBJDIR)/TestMultiImages.o
+OBJECTS += $(OBJDIR)/TestSecondaryWindow.o
 OBJECTS += $(OBJDIR)/TestSingleImage.o
 OBJECTS += $(OBJDIR)/Texture.o
 OBJECTS += $(OBJDIR)/VertexArray.o
 OBJECTS += $(OBJDIR)/VertexBuffer.o
 OBJECTS += $(OBJDIR)/VertexBufferLayout.o
+OBJECTS += $(OBJDIR)/Window.o
 OBJECTS += $(OBJDIR)/imgui.o
 OBJECTS += $(OBJDIR)/imgui_demo.o
 OBJECTS += $(OBJDIR)/imgui_draw.o
@@ -114,7 +119,6 @@ OBJECTS += $(OBJDIR)/imgui_impl_glfw.o
 OBJECTS += $(OBJDIR)/imgui_impl_opengl3.o
 OBJECTS += $(OBJDIR)/imgui_widgets.o
 OBJECTS += $(OBJDIR)/main.o
-OBJECTS += $(OBJDIR)/opengl.o
 OBJECTS += $(OBJDIR)/stb_image.o
 
 # Rules
@@ -185,6 +189,12 @@ endif
 $(OBJDIR)/Engine.o: source/core/Engine.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/GLFWWindow.o: source/core/GLFWWindow.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Window.o: source/core/Window.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: source/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -209,9 +219,6 @@ $(OBJDIR)/VertexBuffer.o: source/rendering/VertexBuffer.cpp
 $(OBJDIR)/VertexBufferLayout.o: source/rendering/VertexBufferLayout.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/opengl.o: source/rendering/opengl.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/TestColorChangingSquare.o: tests/TestColorChangingSquare.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -219,6 +226,9 @@ $(OBJDIR)/TestMenu.o: tests/TestMenu.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/TestMultiImages.o: tests/TestMultiImages.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/TestSecondaryWindow.o: tests/TestSecondaryWindow.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/TestSingleImage.o: tests/TestSingleImage.cpp

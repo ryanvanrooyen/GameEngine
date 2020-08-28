@@ -18,7 +18,7 @@ public:
     TestMultiImages();
     const char* LayerName() const override { return "Duplicate Textures"; }
     void OnUpdate(float deltaTime) override;
-    void OnGuiRender() override;
+    void OnGUIRender(Window& window) override;
     ~TestMultiImages() {}
 
 private:

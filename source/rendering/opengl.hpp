@@ -6,12 +6,11 @@
 #include <GLFW/glfw3.h>
 #include "../core/logging.h"
 
-#define GLCall(x) GLClearErrors(); x; ASSERT(GLCheckErrors(#x, __FILE__, __LINE__), "OpenGL Call Failed")
-
-namespace Game
-{
-
-void GLClearErrors();
-bool GLCheckErrors(const char * function, const char* file, int line);
-
-}
+// Clear any previous errors, call the GL function x, then assert any errors:
+#define GLCall(x) \
+    while (glGetError());\
+    x;\
+    while (GLenum error = glGetError())\
+    {\
+        ERROR("OpenGL Error {:x}: {}", error, #x);\
+    }\

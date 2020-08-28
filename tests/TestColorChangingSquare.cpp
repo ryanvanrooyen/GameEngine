@@ -1,8 +1,8 @@
 
 #include "TestColorChangingSquare.hpp"
+#include "../source/core/Window.hpp"
 #include "../source/rendering/Renderer.hpp"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "imgui.h"
 
 namespace Game::Test
 {
@@ -61,13 +61,15 @@ void TestColorChangingSquare::OnUpdate(float deltaTime)
 }
 
 
-void TestColorChangingSquare::OnGuiRender()
+void TestColorChangingSquare::OnGUIRender(Window& window)
 {
+    ImGui::Begin(("##Window_" + window.Name()).c_str());
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position:");
-    ImGui::SliderFloat("##X", &translation.x, 0.f, 960.f - width, "X: %.0f");
-    ImGui::SliderFloat("##Y", &translation.y, 0.f, 540.f - height, "Y: %.0f");
+    ImGui::SliderFloat(("##X_" + window.Name()).c_str(), &translation.x, 0.f, 960.f - width, "X: %.0f");
+    ImGui::SliderFloat(("##Y_" + window.Name()).c_str(), &translation.y, 0.f, 540.f - height, "Y: %.0f");
     ImGui::PopItemWidth();
+    ImGui::End();
 }
 
 }

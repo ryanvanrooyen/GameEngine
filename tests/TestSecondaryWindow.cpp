@@ -1,6 +1,7 @@
 
-#include "TestSingleImage.hpp"
+#include "TestSecondaryWindow.hpp"
 #include "../source/rendering/Renderer.hpp"
+#include "../source/core/logging.h"
 #include "imgui.h"
 
 
@@ -11,7 +12,7 @@ static float width = 100.f;
 static float height = 100.f;
 
 
-TestSingleImage::TestSingleImage()
+TestSecondaryWindow::TestSecondaryWindow()
     : shader("shaders/vertexShader.glsl", "shaders/fragmentTextureShader.glsl")
     , texture("resources/logo3.png")
     , proj(glm::ortho(0.f, 960.f, 0.f, 540.f, -1.f, 1.f))
@@ -47,8 +48,33 @@ TestSingleImage::TestSingleImage()
 }
 
 
-void TestSingleImage::OnUpdate(float deltaTime)
+bool TestSecondaryWindow::OnKeyPress(Window& window, int key)
 {
+    if (key == 32)  { // Spacebar Key
+        TRACE("Spacebar pressed!");
+        if (secondaryWindow)
+        {
+            delete secondaryWindow;
+            secondaryWindow = nullptr;
+        }
+        else
+        {
+            secondaryWindow = Window::Create("Secondary Window", &window);
+        }
+
+        return true;
+    }
+    return false;
+}
+
+
+void TestSecondaryWindow::OnUpdate(float deltaTime)
+{
+    if (secondaryWindow)
+    {
+        secondaryWindow->Update(deltaTime);
+    }
+
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
 
@@ -59,13 +85,25 @@ void TestSingleImage::OnUpdate(float deltaTime)
 }
 
 
-void TestSingleImage::OnGUIRender(Window& window)
+void TestSecondaryWindow::OnGUIRender(Window& window)
 {
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position:");
     ImGui::SliderFloat("##X", &translation.x, 0.f, 960.f - width, "X: %.0f");
     ImGui::SliderFloat("##Y", &translation.y, 0.f, 540.f - height, "Y: %.0f");
+    ImGui::NewLine();
+    ImGui::TextUnformatted("Press Space to open a secondary window!");
+    ImGui::NewLine();
     ImGui::PopItemWidth();
+}
+
+
+TestSecondaryWindow::~TestSecondaryWindow()
+{
+    if (secondaryWindow)
+    {
+        delete secondaryWindow;
+    }
 }
 
 }
