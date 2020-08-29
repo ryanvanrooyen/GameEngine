@@ -9,26 +9,38 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug)
+  Glad_config = debug
   Engine_config = debug
+  GLFW_config = debug
   EngineTests_config = debug
 
 else ifeq ($(config),release)
+  Glad_config = release
   Engine_config = release
+  GLFW_config = release
   EngineTests_config = release
 
 else ifeq ($(config),dist)
+  Glad_config = dist
   Engine_config = dist
+  GLFW_config = dist
   EngineTests_config = dist
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := Engine EngineTests
+PROJECTS := Glad Engine GLFW EngineTests
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
+
+Glad:
+ifneq (,$(Glad_config))
+	@echo "==== Building Glad ($(Glad_config)) ===="
+	@${MAKE} --no-print-directory -C vendor -f Glad.make config=$(Glad_config)
+endif
 
 Engine:
 ifneq (,$(Engine_config))
@@ -36,14 +48,22 @@ ifneq (,$(Engine_config))
 	@${MAKE} --no-print-directory -C . -f Engine.make config=$(Engine_config)
 endif
 
-EngineTests: Engine
+GLFW:
+ifneq (,$(GLFW_config))
+	@echo "==== Building GLFW ($(GLFW_config)) ===="
+	@${MAKE} --no-print-directory -C vendor -f GLFW.make config=$(GLFW_config)
+endif
+
+EngineTests: Engine GLFW Glad
 ifneq (,$(EngineTests_config))
 	@echo "==== Building EngineTests ($(EngineTests_config)) ===="
 	@${MAKE} --no-print-directory -C . -f EngineTests.make config=$(EngineTests_config)
 endif
 
 clean:
+	@${MAKE} --no-print-directory -C vendor -f Glad.make clean
 	@${MAKE} --no-print-directory -C . -f Engine.make clean
+	@${MAKE} --no-print-directory -C vendor -f GLFW.make clean
 	@${MAKE} --no-print-directory -C . -f EngineTests.make clean
 
 help:
@@ -57,7 +77,9 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
+	@echo "   Glad"
 	@echo "   Engine"
+	@echo "   GLFW"
 	@echo "   EngineTests"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"

@@ -27,8 +27,6 @@ endif
 ifeq ($(origin AR), default)
   AR = ar
 endif
-TARGETDIR = bin
-TARGET = $(TARGETDIR)/libEngine.a
 PCH = Engine/EngineCommon.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
@@ -38,7 +36,7 @@ ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
 LIBS += -framework Cocoa -framework OpenGL -framework IOKit
 LDDEPS +=
-ALL_LDFLAGS += $(LDFLAGS) -Lvendor/glfw/build -Lvendor/glad -m64
+ALL_LDFLAGS += $(LDFLAGS) -Lvendor/glfw/build -m64
 LINKCMD = $(AR) -rcs "$@" $(OBJECTS)
 define PREBUILDCMDS
 endef
@@ -48,18 +46,24 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
+TARGETDIR = bin/obj/Debug
+TARGET = $(TARGETDIR)/libEngine.a
 OBJDIR = bin/obj/Debug/Engine
 DEFINES += -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -Wall
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17 -Wall
 
 else ifeq ($(config),release)
+TARGETDIR = bin/obj/Release
+TARGET = $(TARGETDIR)/libEngine.a
 OBJDIR = bin/obj/Release/Engine
 DEFINES += -DRELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -Wall
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -std=c++17 -Wall
 
 else ifeq ($(config),dist)
+TARGETDIR = bin/obj/Dist
+TARGET = $(TARGETDIR)/libEngine.a
 OBJDIR = bin/obj/Dist/Engine
 DEFINES += -DDIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O3 -Wall

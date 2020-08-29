@@ -33,9 +33,7 @@ INCLUDES += -IEngine -IEngineTests -Ivendor/spdlog/include -Ivendor/glfw/include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += bin/libEngine.a -framework Cocoa -framework OpenGL -framework IOKit -lglfw3 -lglad
-LDDEPS += bin/libEngine.a
-ALL_LDFLAGS += $(LDFLAGS) -Lvendor/glfw/build -Lvendor/glad -m64
+ALL_LDFLAGS += $(LDFLAGS) -m64
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -49,18 +47,24 @@ OBJDIR = bin/obj/Debug/EngineTests
 DEFINES += -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -Wall
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17 -Wall
+LIBS += bin/obj/Debug/libEngine.a bin/obj/Debug/libGLFW.a bin/obj/Debug/libGlad.a -framework Cocoa -framework OpenGL -framework IOKit
+LDDEPS += bin/obj/Debug/libEngine.a bin/obj/Debug/libGLFW.a bin/obj/Debug/libGlad.a
 
 else ifeq ($(config),release)
 OBJDIR = bin/obj/Release/EngineTests
 DEFINES += -DRELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -Wall
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O2 -std=c++17 -Wall
+LIBS += bin/obj/Release/libEngine.a bin/obj/Release/libGLFW.a bin/obj/Release/libGlad.a -framework Cocoa -framework OpenGL -framework IOKit
+LDDEPS += bin/obj/Release/libEngine.a bin/obj/Release/libGLFW.a bin/obj/Release/libGlad.a
 
 else ifeq ($(config),dist)
 OBJDIR = bin/obj/Dist/EngineTests
 DEFINES += -DDIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O3 -Wall
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -Werror -O3 -std=c++17 -Wall
+LIBS += bin/obj/Dist/libEngine.a bin/obj/Dist/libGLFW.a bin/obj/Dist/libGlad.a -framework Cocoa -framework OpenGL -framework IOKit
+LDDEPS += bin/obj/Dist/libEngine.a bin/obj/Dist/libGLFW.a bin/obj/Dist/libGlad.a
 
 endif
 
