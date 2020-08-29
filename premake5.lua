@@ -44,39 +44,6 @@ workspace "GameEngine"
         }
 
 
-    project "Engine"
-        kind "StaticLib"
-        language "C++"
-        cppdialect "C++17"
-        buildoptions { "-Wall" }
-        targetdir "bin/obj/%{cfg.buildcfg}"
-        pchheader "EngineCommon.h"
-        pchsource "Engine/EngineCommon.cpp"
-        -- location "Engine"
-
-        files {
-            "Engine/**.h",
-            "Engine/**.hpp",
-            "Engine/**.cpp",
-            "vendor/stb/**.cpp",
-            "vendor/imgui/*.cpp",
-            "vendor/imgui/examples/imgui_impl_glfw.cpp",
-            "vendor/imgui/examples/imgui_impl_opengl3.cpp",
-        }
-        includedirs {
-            "Engine",
-            "vendor/spdlog/include",
-            "vendor/glfw/include",
-            "vendor/glad",
-            "vendor/imgui",
-            "vendor/glm",
-            "vendor/stb"
-        }
-        libdirs {
-            "vendor/glfw/build",
-        }
-
-
     project "GLFW"
         kind "StaticLib"
         language "C"
@@ -148,6 +115,36 @@ workspace "GameEngine"
             }
 
 
+    project "Engine"
+        kind "StaticLib"
+        language "C++"
+        cppdialect "C++17"
+        buildoptions { "-Wall" }
+        targetdir "bin/obj/%{cfg.buildcfg}"
+        pchheader "EngineCommon.h"
+        pchsource "Engine/EngineCommon.cpp"
+        -- location "Engine"
+
+        files {
+            "Engine/**.h",
+            "Engine/**.hpp",
+            "Engine/**.cpp",
+            "vendor/stb/**.cpp",
+            "vendor/imgui/*.cpp",
+            "vendor/imgui/examples/imgui_impl_glfw.cpp",
+            "vendor/imgui/examples/imgui_impl_opengl3.cpp",
+        }
+        includedirs {
+            "Engine",
+            "vendor/spdlog/include",
+            "vendor/glfw/include",
+            "vendor/glad",
+            "vendor/imgui",
+            "vendor/glm",
+            "vendor/stb"
+        }
+
+
     project "EngineTests"
         kind "WindowedApp"
         language "C++"
@@ -162,7 +159,6 @@ workspace "GameEngine"
             "Engine",
             "EngineTests",
             "vendor/spdlog/include",
-            "vendor/glad",
             "vendor/imgui",
             "vendor/glm",
         }
