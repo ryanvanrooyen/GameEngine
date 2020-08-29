@@ -98,13 +98,6 @@ workspace "GameEngine"
 
         filter "system:macosx"
             files {
-                "vendor/glfw/src/cocoa_platform.h",
-                "vendor/glfw/src/cocoa_joystick.h",
-                "vendor/glfw/src/posix_thread.h",
-                "vendor/glfw/src/nsgl_context.h",
-                "vendor/glfw/src/egl_context.h",
-                "vendor/glfw/src/egl_context.h",
-                "vendor/glfw/src/osmesa_context.h",
                 "vendor/glfw/src/cocoa_init.m",
                 "vendor/glfw/src/cocoa_joystick.m",
                 "vendor/glfw/src/cocoa_monitor.m",
@@ -162,18 +155,15 @@ workspace "GameEngine"
         buildoptions { "-Wall" }
 
         files {
-            "EngineTests/**.h",
-            "EngineTests/**.hpp",
+            "EngineTests/**.h*",
             "EngineTests/**.cpp",
         }
         includedirs {
             "Engine",
             "EngineTests",
             "vendor/spdlog/include",
-            "vendor/glfw/include",
             "vendor/glad",
             "vendor/imgui",
             "vendor/glm",
-            "vendor/stb"
         }
         links { "Engine", "GLFW", "Glad" }
