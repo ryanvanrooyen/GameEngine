@@ -1,6 +1,6 @@
 
-#include "TestSingleImage.hpp"
-#include "../Engine/rendering/Renderer.hpp"
+#include "TestMultiImages.hpp"
+#include "../Engine/Rendering/Renderer.hpp"
 #include "imgui.h"
 
 
@@ -11,12 +11,13 @@ static float width = 100.f;
 static float height = 100.f;
 
 
-TestSingleImage::TestSingleImage()
+TestMultiImages::TestMultiImages()
     : shader("shaders/vertexShader.glsl", "shaders/fragmentTextureShader.glsl")
     , texture("resources/logo3.png")
     , proj(glm::ortho(0.f, 960.f, 0.f, 540.f, -1.f, 1.f))
     , view(glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)))
-    , translation(200, 200, 0)
+    , translation1(200, 200, 0)
+    , translation2(0, 0, 0)
 {
     shader.Compile();
     shader.Bind();
@@ -47,24 +48,33 @@ TestSingleImage::TestSingleImage()
 }
 
 
-void TestSingleImage::OnUpdate(float deltaTime)
+void TestMultiImages::OnUpdate(float deltaTime)
 {
-    glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
-    glm::mat4 mvp = proj * view * model;
+    glm::mat4 model1 = glm::translate(glm::mat4(1.f), translation1);
+    glm::mat4 mvp1 = proj * view * model1;
+
+    glm::mat4 model2 = glm::translate(glm::mat4(1.f), translation2);
+    glm::mat4 mvp2 = proj * view * model2;
 
     shader.Bind();
-    shader.SetUniformMat4f("u_MVP", mvp);
+    shader.SetUniformMat4f("u_MVP", mvp1);
+    Renderer::Draw(vertexArray, indexBuffer, shader);
 
+    shader.Bind();
+    shader.SetUniformMat4f("u_MVP", mvp2);
     Renderer::Draw(vertexArray, indexBuffer, shader);
 }
 
 
-void TestSingleImage::OnGUIRender(Window& window)
+void TestMultiImages::OnGUIRender(Window& window)
 {
     ImGui::PushItemWidth(-1);
-    ImGui::TextUnformatted("Position:");
-    ImGui::SliderFloat("##X", &translation.x, 0.f, 960.f - width, "X: %.0f");
-    ImGui::SliderFloat("##Y", &translation.y, 0.f, 540.f - height, "Y: %.0f");
+    ImGui::TextUnformatted("Position 1:");
+    ImGui::SliderFloat("##X1", &translation1.x, 0.f, 960.f - width, "X: %.0f");
+    ImGui::SliderFloat("##Y1", &translation1.y, 0.f, 540.f - height, "Y: %.0f");
+    ImGui::TextUnformatted("Position 2:");
+    ImGui::SliderFloat("##X2", &translation2.x, 0.f, 960.f - width, "X: %.0f");
+    ImGui::SliderFloat("##Y2", &translation2.y, 0.f, 540.f - height, "Y: %.0f");
     ImGui::PopItemWidth();
 }
 

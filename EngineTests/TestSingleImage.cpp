@@ -1,8 +1,8 @@
 
-#include "TestColorChangingSquare.hpp"
-#include "../Engine/core/Window.hpp"
-#include "../Engine/rendering/Renderer.hpp"
+#include "TestSingleImage.hpp"
+#include "../Engine/Rendering/Renderer.hpp"
 #include "imgui.h"
+
 
 namespace Game::Test
 {
@@ -11,8 +11,9 @@ static float width = 100.f;
 static float height = 100.f;
 
 
-TestColorChangingSquare::TestColorChangingSquare()
-    : shader("shaders/vertexShader.glsl", "shaders/fragmentColorShader.glsl")
+TestSingleImage::TestSingleImage()
+    : shader("shaders/vertexShader.glsl", "shaders/fragmentTextureShader.glsl")
+    , texture("resources/logo3.png")
     , proj(glm::ortho(0.f, 960.f, 0.f, 540.f, -1.f, 1.f))
     , view(glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)))
     , translation(200, 200, 0)
@@ -20,6 +21,8 @@ TestColorChangingSquare::TestColorChangingSquare()
     shader.Compile();
     shader.Bind();
     shader.SetUniform1i("u_Texture", 0);
+
+    texture.Bind();
 
     float positions[] = {
         0.f,   0.f, 0.f, 0.f,
@@ -44,32 +47,25 @@ TestColorChangingSquare::TestColorChangingSquare()
 }
 
 
-void TestColorChangingSquare::OnUpdate(float deltaTime)
+void TestSingleImage::OnUpdate(float deltaTime)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
 
-    if (redColor > 1.f || redColor < 0.f)
-        increment = -increment;
-    redColor += increment;
-
     shader.Bind();
     shader.SetUniformMat4f("u_MVP", mvp);
-    shader.SetUniform4f("u_Color", redColor, 0.3f, 0.8f, 1.f);
 
     Renderer::Draw(vertexArray, indexBuffer, shader);
 }
 
 
-void TestColorChangingSquare::OnGUIRender(Window& window)
+void TestSingleImage::OnGUIRender(Window& window)
 {
-    ImGui::Begin(("##Window_" + window.Name()).c_str());
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position:");
-    ImGui::SliderFloat(("##X_" + window.Name()).c_str(), &translation.x, 0.f, 960.f - width, "X: %.0f");
-    ImGui::SliderFloat(("##Y_" + window.Name()).c_str(), &translation.y, 0.f, 540.f - height, "Y: %.0f");
+    ImGui::SliderFloat("##X", &translation.x, 0.f, 960.f - width, "X: %.0f");
+    ImGui::SliderFloat("##Y", &translation.y, 0.f, 540.f - height, "Y: %.0f");
     ImGui::PopItemWidth();
-    ImGui::End();
 }
 
 }

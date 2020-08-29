@@ -1,7 +1,7 @@
 
-#include "../Engine/core/Layer.hpp"
-#include "../Engine/core/Window.hpp"
-#include "../Engine/events/Listeners.hpp"
+#include "../Engine/Core/Layer.hpp"
+#include "../Engine/Core/Window.hpp"
+#include "../Engine/Events/Listeners.hpp"
 
 namespace Game::Test
 {

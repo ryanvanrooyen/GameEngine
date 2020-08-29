@@ -2,9 +2,9 @@
 #include "Window.hpp"
 #include "logging.h"
 #include "Layer.hpp"
-#include "../events/Listeners.hpp"
+#include "../Events/Listeners.hpp"
 #include "GLFWWindow.hpp"
-#include "../rendering/Renderer.hpp"
+#include "../Rendering/Renderer.hpp"
 
 
 namespace Game

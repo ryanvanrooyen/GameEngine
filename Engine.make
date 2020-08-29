@@ -28,7 +28,7 @@ ifeq ($(origin AR), default)
   AR = ar
 endif
 TARGETDIR = bin
-TARGET = $(TARGETDIR)/GameEngine.app
+TARGET = $(TARGETDIR)/Engine.app
 INCLUDES += -Ivendor/spdlog/include -Ivendor/glfw/include -Ivendor/glad -Ivendor/imgui -Ivendor/glm -Ivendor/stb
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -132,7 +132,7 @@ $(dir $(TARGETDIR))Info.plist:
 
 $(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
-	@echo Linking GameEngine
+	@echo Linking Engine
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -153,7 +153,7 @@ else
 endif
 
 clean:
-	@echo Cleaning GameEngine
+	@echo Cleaning Engine
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(GENERATED)
@@ -186,52 +186,52 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/Engine.o: Engine/core/Engine.cpp
+$(OBJDIR)/Engine.o: Engine/Core/Engine.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/GLFWWindow.o: Engine/core/GLFWWindow.cpp
+$(OBJDIR)/GLFWWindow.o: Engine/Core/GLFWWindow.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Window.o: Engine/core/Window.cpp
+$(OBJDIR)/Window.o: Engine/Core/Window.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/main.o: Engine/main.cpp
+$(OBJDIR)/IndexBuffer.o: Engine/Rendering/IndexBuffer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/IndexBuffer.o: Engine/rendering/IndexBuffer.cpp
+$(OBJDIR)/Renderer.o: Engine/Rendering/Renderer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Renderer.o: Engine/rendering/Renderer.cpp
+$(OBJDIR)/Shader.o: Engine/Rendering/Shader.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Shader.o: Engine/rendering/Shader.cpp
+$(OBJDIR)/Texture.o: Engine/Rendering/Texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Texture.o: Engine/rendering/Texture.cpp
+$(OBJDIR)/VertexArray.o: Engine/Rendering/VertexArray.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/VertexArray.o: Engine/rendering/VertexArray.cpp
+$(OBJDIR)/VertexBuffer.o: Engine/Rendering/VertexBuffer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/VertexBuffer.o: Engine/rendering/VertexBuffer.cpp
+$(OBJDIR)/VertexBufferLayout.o: Engine/Rendering/VertexBufferLayout.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/VertexBufferLayout.o: Engine/rendering/VertexBufferLayout.cpp
+$(OBJDIR)/TestColorChangingSquare.o: EngineTests/TestColorChangingSquare.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/TestColorChangingSquare.o: tests/TestColorChangingSquare.cpp
+$(OBJDIR)/TestMenu.o: EngineTests/TestMenu.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/TestMenu.o: tests/TestMenu.cpp
+$(OBJDIR)/TestMultiImages.o: EngineTests/TestMultiImages.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/TestMultiImages.o: tests/TestMultiImages.cpp
+$(OBJDIR)/TestSecondaryWindow.o: EngineTests/TestSecondaryWindow.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/TestSecondaryWindow.o: tests/TestSecondaryWindow.cpp
+$(OBJDIR)/TestSingleImage.o: EngineTests/TestSingleImage.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/TestSingleImage.o: tests/TestSingleImage.cpp
+$(OBJDIR)/main.o: EngineTests/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/imgui_impl_glfw.o: vendor/imgui/examples/imgui_impl_glfw.cpp

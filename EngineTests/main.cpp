@@ -1,9 +1,9 @@
 
-#include "core/logging.h"
-#include "core/Engine.hpp"
-#include "../tests/TestMenu.hpp"
-#include "../tests/TestColorChangingSquare.hpp"
-#include "../tests/TestSingleImage.hpp"
+#include "../Engine/Core/logging.h"
+#include "../Engine/Core/Engine.hpp"
+#include "TestMenu.hpp"
+#include "TestColorChangingSquare.hpp"
+#include "TestSingleImage.hpp"
 
 
 int main()

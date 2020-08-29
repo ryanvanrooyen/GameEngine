@@ -2,7 +2,7 @@
 #include "Engine.hpp"
 #include "Window.hpp"
 #include <exception>
-#include "../core/logging.h"
+#include "../Core/logging.h"
 
 namespace Game
 {
