@@ -1,6 +1,6 @@
 
 #include "VertexBufferLayout.hpp"
-#include "../Core/logging.h"
+#include "Core/logging.h"
 #include "opengl.hpp"
 
 namespace Game

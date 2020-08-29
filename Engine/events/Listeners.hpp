@@ -12,7 +12,6 @@ namespace Game
         virtual bool OnKeyRelease(Window& window, int key) { return false; }
         virtual bool OnKeyRepeat(Window& window, int key) { return false; }
 
-
     };
 
 }

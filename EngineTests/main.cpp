@@ -1,6 +1,6 @@
 
-#include "../Engine/Core/logging.h"
-#include "../Engine/Core/Engine.hpp"
+#include "Core/logging.h"
+#include "Core/Engine.hpp"
 #include "TestMenu.hpp"
 #include "TestColorChangingSquare.hpp"
 #include "TestSingleImage.hpp"

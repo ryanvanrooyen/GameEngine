@@ -1,8 +1,7 @@
 
 #pragma once
 
-#include "../Events/Listeners.hpp"
-
+#include "Events/Listeners.hpp"
 
 namespace Game
 {

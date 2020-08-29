@@ -1,8 +1,6 @@
 
 #include "Shader.hpp"
 #include "opengl.hpp"
-#include <sstream>
-#include <fstream>
 
 using std::string;
 

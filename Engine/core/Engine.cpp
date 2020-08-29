@@ -1,8 +1,8 @@
 
+#include "EngineCommon.h"
 #include "Engine.hpp"
 #include "Window.hpp"
-#include <exception>
-#include "../Core/logging.h"
+#include "Core/logging.h"
 
 namespace Game
 {

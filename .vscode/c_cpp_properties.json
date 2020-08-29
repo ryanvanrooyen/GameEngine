@@ -3,6 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
+                "${workspaceFolder}/Engine",
                 "${workspaceFolder}/vendor/glad",
                 "${workspaceFolder}/vendor/spdlog/include",
                 "${workspaceFolder}/vendor/glfw/include",

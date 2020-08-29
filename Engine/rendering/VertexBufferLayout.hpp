@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <vector>
+#include "EngineCommon.h"
 
 namespace Game
 {

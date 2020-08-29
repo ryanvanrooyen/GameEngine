@@ -1,10 +1,11 @@
 
+#include "EngineCommon.h"
 #include "GLFWWindow.hpp"
-#include "../Rendering/opengl.hpp"
+#include "Rendering/opengl.hpp"
+#include <GLFW/glfw3.h>
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
-#include <functional>
-#include "../Core/logging.h"
+#include "Core/logging.h"
 
 
 namespace Game

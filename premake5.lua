@@ -13,17 +13,18 @@ workspace "GameEngine"
 
     filter "configurations:Debug"
         defines { "DEBUG" }
+        flags { "MultiProcessorCompile" }
         symbols "On"
 
     filter "configurations:Release"
         defines { "RELEASE" }
-        flags "FatalWarnings"
+        flags { "MultiProcessorCompile", "FatalWarnings" }
         optimize "On"
 
     filter "configurations:Dist"
         defines { "DIST" }
-        flags "FatalWarnings"
-        optimize "On"
+        flags { "MultiProcessorCompile", "FatalWarnings" }
+        optimize "Speed"
 
 
     project "Engine"
@@ -31,6 +32,8 @@ workspace "GameEngine"
         language "C++"
         cppdialect "C++17"
         buildoptions { "-Wall" }
+        pchheader "EngineCommon.h"
+        pchsource "Engine/EngineCommon.cpp"
         -- location "Engine"
 
         files {
@@ -43,6 +46,7 @@ workspace "GameEngine"
             "vendor/imgui/examples/imgui_impl_opengl3.cpp",
         }
         includedirs {
+            "Engine",
             "vendor/spdlog/include",
             "vendor/glfw/include",
             "vendor/glad",
@@ -69,6 +73,8 @@ workspace "GameEngine"
             "EngineTests/**.cpp",
         }
         includedirs {
+            "Engine",
+            "EngineTests",
             "vendor/spdlog/include",
             "vendor/glfw/include",
             "vendor/glad",
