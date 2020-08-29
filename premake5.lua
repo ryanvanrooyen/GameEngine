@@ -9,6 +9,7 @@ workspace "GameEngine"
     configurations { "Debug", "Release", "Dist" }
     architecture "x64"
     targetdir "bin/"
+    objdir "bin/obj/"
 
     filter "configurations:Debug"
         defines { "DEBUG" }
@@ -26,18 +27,16 @@ workspace "GameEngine"
 
 
     project "Engine"
-        kind "WindowedApp"
+        kind "StaticLib"
         language "C++"
         cppdialect "C++17"
         buildoptions { "-Wall" }
         -- location "Engine"
 
         files {
-            "Engine/**.hpp",
             "Engine/**.h",
+            "Engine/**.hpp",
             "Engine/**.cpp",
-            "EngineTests/**.hpp",
-            "EngineTests/**.cpp",
             "vendor/stb/**.cpp",
             "vendor/imgui/*.cpp",
             "vendor/imgui/examples/imgui_impl_glfw.cpp",
@@ -55,36 +54,30 @@ workspace "GameEngine"
             "vendor/glfw/build",
             "vendor/glad"
         }
-        links { "glfw3", "glad" }
+        -- links { "glfw3", "glad" }
 
 
-    -- project "EngineTests"
-    --     kind "WindowedApp"
-    --     language "C++"
-    --     cppdialect "C++17"
-    --     buildoptions { "-Wall" }
+    project "EngineTests"
+        kind "WindowedApp"
+        language "C++"
+        cppdialect "C++17"
+        buildoptions { "-Wall" }
 
-    --     files {
-    --         "Engine/**.hpp",
-    --         "Engine/**.h",
-    --         "Engine/**.cpp",
-    --         "EngineTests/**.hpp",
-    --         "EngineTests/**.cpp",
-    --         "vendor/stb/**.cpp",
-    --         "vendor/imgui/*.cpp",
-    --         "vendor/imgui/examples/imgui_impl_glfw.cpp",
-    --         "vendor/imgui/examples/imgui_impl_opengl3.cpp",
-    --     }
-    --     includedirs {
-    --         "vendor/spdlog/include",
-    --         "vendor/glfw/include",
-    --         "vendor/glad",
-    --         "vendor/imgui",
-    --         "vendor/glm",
-    --         "vendor/stb"
-    --     }
-    --     libdirs {
-    --         "vendor/glfw/build",
-    --         "vendor/glad"
-    --     }
-    --     links { "glfw3", "glad" }
+        files {
+            "EngineTests/**.h",
+            "EngineTests/**.hpp",
+            "EngineTests/**.cpp",
+        }
+        includedirs {
+            "vendor/spdlog/include",
+            "vendor/glfw/include",
+            "vendor/glad",
+            "vendor/imgui",
+            "vendor/glm",
+            "vendor/stb"
+        }
+        libdirs {
+            "vendor/glfw/build",
+            "vendor/glad"
+        }
+        links { "Engine", "glfw3", "glad" }

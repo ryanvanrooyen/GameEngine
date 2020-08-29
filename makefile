@@ -10,18 +10,21 @@ endif
 
 ifeq ($(config),debug)
   Engine_config = debug
+  EngineTests_config = debug
 
 else ifeq ($(config),release)
   Engine_config = release
+  EngineTests_config = release
 
 else ifeq ($(config),dist)
   Engine_config = dist
+  EngineTests_config = dist
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := Engine
+PROJECTS := Engine EngineTests
 
 .PHONY: all clean help $(PROJECTS) 
 
@@ -33,8 +36,15 @@ ifneq (,$(Engine_config))
 	@${MAKE} --no-print-directory -C . -f Engine.make config=$(Engine_config)
 endif
 
+EngineTests: Engine
+ifneq (,$(EngineTests_config))
+	@echo "==== Building EngineTests ($(EngineTests_config)) ===="
+	@${MAKE} --no-print-directory -C . -f EngineTests.make config=$(EngineTests_config)
+endif
+
 clean:
 	@${MAKE} --no-print-directory -C . -f Engine.make clean
+	@${MAKE} --no-print-directory -C . -f EngineTests.make clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
@@ -48,5 +58,6 @@ help:
 	@echo "   all (default)"
 	@echo "   clean"
 	@echo "   Engine"
+	@echo "   EngineTests"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"
