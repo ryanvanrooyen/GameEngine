@@ -9,32 +9,32 @@ ifndef verbose
 endif
 
 ifeq ($(config),debug)
-  GameEngine_config = debug
+  Engine_config = debug
 
 else ifeq ($(config),release)
-  GameEngine_config = release
+  Engine_config = release
 
 else ifeq ($(config),dist)
-  GameEngine_config = dist
+  Engine_config = dist
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := GameEngine
+PROJECTS := Engine
 
 .PHONY: all clean help $(PROJECTS) 
 
 all: $(PROJECTS)
 
-GameEngine:
-ifneq (,$(GameEngine_config))
-	@echo "==== Building GameEngine ($(GameEngine_config)) ===="
-	@${MAKE} --no-print-directory -C . -f GameEngine.make config=$(GameEngine_config)
+Engine:
+ifneq (,$(Engine_config))
+	@echo "==== Building Engine ($(Engine_config)) ===="
+	@${MAKE} --no-print-directory -C . -f Engine.make config=$(Engine_config)
 endif
 
 clean:
-	@${MAKE} --no-print-directory -C . -f GameEngine.make clean
+	@${MAKE} --no-print-directory -C . -f Engine.make clean
 
 help:
 	@echo "Usage: make [config=name] [target]"
@@ -47,6 +47,6 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   GameEngine"
+	@echo "   Engine"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"

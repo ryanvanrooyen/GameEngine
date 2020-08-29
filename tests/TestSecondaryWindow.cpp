@@ -1,7 +1,7 @@
 
 #include "TestSecondaryWindow.hpp"
-#include "../source/rendering/Renderer.hpp"
-#include "../source/core/logging.h"
+#include "../Engine/rendering/Renderer.hpp"
+#include "../Engine/core/logging.h"
 #include "imgui.h"
 
 

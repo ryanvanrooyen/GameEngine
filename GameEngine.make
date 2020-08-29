@@ -186,37 +186,37 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/Engine.o: source/core/Engine.cpp
+$(OBJDIR)/Engine.o: Engine/core/Engine.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/GLFWWindow.o: source/core/GLFWWindow.cpp
+$(OBJDIR)/GLFWWindow.o: Engine/core/GLFWWindow.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Window.o: source/core/Window.cpp
+$(OBJDIR)/Window.o: Engine/core/Window.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/main.o: source/main.cpp
+$(OBJDIR)/main.o: Engine/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/IndexBuffer.o: source/rendering/IndexBuffer.cpp
+$(OBJDIR)/IndexBuffer.o: Engine/rendering/IndexBuffer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Renderer.o: source/rendering/Renderer.cpp
+$(OBJDIR)/Renderer.o: Engine/rendering/Renderer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Shader.o: source/rendering/Shader.cpp
+$(OBJDIR)/Shader.o: Engine/rendering/Shader.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Texture.o: source/rendering/Texture.cpp
+$(OBJDIR)/Texture.o: Engine/rendering/Texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/VertexArray.o: source/rendering/VertexArray.cpp
+$(OBJDIR)/VertexArray.o: Engine/rendering/VertexArray.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/VertexBuffer.o: source/rendering/VertexBuffer.cpp
+$(OBJDIR)/VertexBuffer.o: Engine/rendering/VertexBuffer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/VertexBufferLayout.o: source/rendering/VertexBufferLayout.cpp
+$(OBJDIR)/VertexBufferLayout.o: Engine/rendering/VertexBufferLayout.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/TestColorChangingSquare.o: tests/TestColorChangingSquare.cpp

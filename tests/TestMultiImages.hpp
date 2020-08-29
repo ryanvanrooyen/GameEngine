@@ -1,11 +1,11 @@
 
-#include "../source/core/Layer.hpp"
-#include "../source/rendering/Shader.hpp"
-#include "../source/rendering/Texture.hpp"
-#include "../source/rendering/VertexBuffer.hpp"
-#include "../source/rendering/VertexBufferLayout.hpp"
-#include "../source/rendering/VertexArray.hpp"
-#include "../source/rendering/IndexBuffer.hpp"
+#include "../Engine/core/Layer.hpp"
+#include "../Engine/rendering/Shader.hpp"
+#include "../Engine/rendering/Texture.hpp"
+#include "../Engine/rendering/VertexBuffer.hpp"
+#include "../Engine/rendering/VertexBufferLayout.hpp"
+#include "../Engine/rendering/VertexArray.hpp"
+#include "../Engine/rendering/IndexBuffer.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 

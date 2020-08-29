@@ -1,7 +1,7 @@
 
 #include "TestColorChangingSquare.hpp"
-#include "../source/core/Window.hpp"
-#include "../source/rendering/Renderer.hpp"
+#include "../Engine/core/Window.hpp"
+#include "../Engine/rendering/Renderer.hpp"
 #include "imgui.h"
 
 namespace Game::Test
