@@ -59,9 +59,11 @@
         "cinttypes": "cpp"
     },
     "files.exclude": {
+        ".gitmodules": true,
         ".vscode": true,
+        "**/Makefile": true,
         "bin": true,
-        "libs": true,
+        "imgui.ini": true,
         "vendor": true
     }
 }
