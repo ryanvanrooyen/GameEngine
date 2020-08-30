@@ -1,4 +1,5 @@
 
+#include "EngineCommon.h"
 #include "Window.hpp"
 #include "logging.h"
 #include "Layer.hpp"

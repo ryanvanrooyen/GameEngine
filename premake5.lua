@@ -3,10 +3,17 @@
 configuration "macosx"
     -- OS X frameworks need the extension to be handled properly
     links { "Cocoa.framework", "OpenGL.framework", "IOKit.framework" }
+    defines { "PLATFORM_MAC" }
+
+
+configuration "windows"
+    defines { "PLATFORM_WINDOWS" }
+    debugdir "$(SolutionDir)" --> Set working dir for VS to root folder
 
 
 workspace "GameEngine"
     configurations { "Debug", "Release", "Dist" }
+    startproject "EngineTests"
     architecture "x64"
     systemversion "latest"
     targetdir "bin/"
@@ -29,16 +36,16 @@ workspace "GameEngine"
         optimize "Speed"
 
 
+group "Vendor"
+
     project "Glad"
         kind "StaticLib"
         language "C"
         location "vendor"
         targetdir "bin/obj/%{cfg.buildcfg}"
-
         files {
             "vendor/glad/**.c",
         }
-
         includedirs {
             "vendor/glad",
         }
@@ -115,24 +122,50 @@ workspace "GameEngine"
             }
 
 
+    project "ImGui"
+        kind "StaticLib"
+        language "C++"
+        location "vendor"
+        targetdir "bin/obj/%{cfg.buildcfg}"
+        files {
+            "vendor/imgui/*.cpp",
+            "vendor/imgui/examples/imgui_impl_glfw.cpp",
+            "vendor/imgui/examples/imgui_impl_opengl3.cpp",
+        }
+        includedirs {
+            "vendor/glfw/include",
+            "vendor/glad",
+            "vendor/imgui",
+        }
+               
+
+    project "Utils"
+        kind "StaticLib"
+        language "C++"
+        location "vendor"
+        targetdir "bin/obj/%{cfg.buildcfg}"
+        files {
+            "vendor/stb/**.cpp",
+        }
+        includedirs {
+            "vendor/stb"
+        }
+               
+
+group ""
+
     project "Engine"
         kind "StaticLib"
+        location "Engine"
         language "C++"
         cppdialect "C++17"
         buildoptions { "-Wall" }
         targetdir "bin/obj/%{cfg.buildcfg}"
         pchheader "EngineCommon.h"
         pchsource "Engine/EngineCommon.cpp"
-        -- location "Engine"
-
         files {
-            "Engine/**.h",
-            "Engine/**.hpp",
+            "Engine/**.h*",
             "Engine/**.cpp",
-            "vendor/stb/**.cpp",
-            "vendor/imgui/*.cpp",
-            "vendor/imgui/examples/imgui_impl_glfw.cpp",
-            "vendor/imgui/examples/imgui_impl_opengl3.cpp",
         }
         includedirs {
             "Engine",
@@ -146,11 +179,11 @@ workspace "GameEngine"
 
 
     project "EngineTests"
-        kind "WindowedApp"
+        kind "ConsoleApp"
+        location "EngineTests"
         language "C++"
         cppdialect "C++17"
         buildoptions { "-Wall" }
-
         files {
             "EngineTests/**.h*",
             "EngineTests/**.cpp",
@@ -162,4 +195,4 @@ workspace "GameEngine"
             "vendor/imgui",
             "vendor/glm",
         }
-        links { "Engine", "GLFW", "Glad" }
+        links { "Engine", "GLFW", "Glad", "ImGui", "Utils" }

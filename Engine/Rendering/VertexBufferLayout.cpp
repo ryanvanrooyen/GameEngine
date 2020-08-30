@@ -1,4 +1,5 @@
 
+#include "EngineCommon.h"
 #include "VertexBufferLayout.hpp"
 #include "Core/logging.h"
 #include "opengl.hpp"

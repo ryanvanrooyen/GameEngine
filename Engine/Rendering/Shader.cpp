@@ -1,4 +1,5 @@
 
+#include "EngineCommon.h"
 #include "Shader.hpp"
 #include "opengl.hpp"
 
@@ -101,15 +102,17 @@ void Shader::SetUniform1i(const string& name, int v1)
     GLCall(glUniform1i(GetUniformLocation(name), v1));
 }
 
-static string readFile(const string& filepath) {
+static string readFile(const std::filesystem::path& filepath) {
   std::ostringstream buffer;
   std::ifstream inputFile (filepath);
   buffer << inputFile.rdbuf();
   return buffer.str();
 }
 
-static unsigned int compileShaderFile(unsigned int type, const string& filepath)
+static unsigned int compileShaderFile(unsigned int type, const std::string& filepath)
 {
+    const std::filesystem::path path(filepath);
+    ASSERT(std::filesystem::exists(path), "Shader file \"{}\" does not exist.", path.u8string());
     string fileContent = readFile(filepath);
     GLCall(unsigned int id = glCreateShader(type));
     const char* src = fileContent.c_str();
