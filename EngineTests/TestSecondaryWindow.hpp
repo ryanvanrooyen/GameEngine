@@ -25,7 +25,7 @@ public:
     void OnGUIRender(Window& window) override;
     ~TestSecondaryWindow();
 
-    bool OnKeyPress(Window& window, int key) override;
+    bool OnKeyPress(Window& window, KeyCode key) override;
 
 private:
     Shader shader;

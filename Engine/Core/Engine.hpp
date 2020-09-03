@@ -23,7 +23,8 @@ namespace Game
         void Quit();
 
         // Events:
-        bool OnKeyPress(Window& window, int key) override;
+        bool OnWindowClose(Window& window) override;
+        bool OnKeyPress(Window& window, KeyCode key) override;
 
         virtual ~Engine();
 

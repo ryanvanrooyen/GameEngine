@@ -13,7 +13,7 @@ namespace Game::Test
         void OnAttach(Window& window) override;
         void OnGUIRender(Window& window) override;
         void OnDetach(Window& window) override;
-        bool OnKeyPress(Window& window, int key) override;
+        bool OnKeyPress(Window& window, KeyCode key) override;
         ~TestMenu();
 
     private:

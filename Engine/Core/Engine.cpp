@@ -60,9 +60,16 @@ void Engine::Quit()
 }
 
 
-bool Engine::OnKeyPress(Window& window, int key)
+bool Engine::OnWindowClose(Window& window)
 {
-    if (key == 256)  { // ESC Key
+    Quit();
+    return true;
+}
+
+
+bool Engine::OnKeyPress(Window& window, KeyCode key)
+{
+    if (key == KeyCode::Escape) {
         Quit();
         return true;
     }

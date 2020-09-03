@@ -9,7 +9,6 @@ struct ImGuiContext;
 
 namespace Game
 {
-
     class GLFWWindow : public Window
     {
     public:
@@ -35,7 +34,11 @@ namespace Game
         Handle* windowHandle = nullptr;
         ImGuiContext* imguiContext;
 
+        static void Event_WindowClose(Handle* handle);
+        static void Event_WindowResize(Handle* handle, int width, int height);
+        static void Event_WindowScroll(Handle* handle, double xOffset, double yOffset);
+        static void Event_MousePress(Handle* handle, int button, int action, int mods);
+        static void Event_MouseMove(Handle* handle, double xPos, double yPos);
         static void Event_KeyPress(Handle* handle, int key, int scancode, int action, int mods);
     };
-
 }

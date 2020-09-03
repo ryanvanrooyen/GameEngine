@@ -29,10 +29,10 @@ void TestMenu::OnDetach(Window& window)
 }
 
 
-bool TestMenu::OnKeyPress(Window& window, int key)
+bool TestMenu::OnKeyPress(Window& window, KeyCode key)
 {
     // Allow ESC to be a back button if we have an active test:
-    if (test && key == 256)  {
+    if (test && key == KeyCode::Escape)  {
         SetChildTest(nullptr);
         return true;
     }

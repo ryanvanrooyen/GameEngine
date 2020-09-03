@@ -138,6 +138,11 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     newWindow->imguiContext = imguiContext;
 
     glfwSetWindowUserPointer(windowHandle, newWindow);
+    glfwSetWindowCloseCallback(windowHandle, Event_WindowClose);
+    glfwSetWindowSizeCallback(windowHandle, Event_WindowResize);
+    glfwSetScrollCallback(windowHandle, Event_WindowScroll);
+    glfwSetMouseButtonCallback(windowHandle, Event_MousePress);
+    glfwSetCursorPosCallback(windowHandle, Event_MouseMove);
     glfwSetKeyCallback(windowHandle, Event_KeyPress);
 
     newWindow->SetVSyncEnabled(true);
@@ -201,6 +206,56 @@ void GLFWWindow::SetVSyncEnabled(bool enabled)
 }
 
 
+void GLFWWindow::Event_WindowClose(Handle* handle)
+{
+    GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
+    if (window) {
+        window->DispatchWindowClose(*window);
+    }
+}
+
+
+void GLFWWindow::Event_WindowResize(Handle* handle, int width, int height)
+{
+    GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
+    if (window) {
+        window->DispatchWindowResize(*window, width, height);
+    }
+}
+
+
+void GLFWWindow::Event_WindowScroll(Handle* handle, double xOffset, double yOffset)
+{
+    GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
+    if (window) {
+        window->DispatchWindowScroll(*window, xOffset, yOffset);
+    }
+}
+
+
+void GLFWWindow::Event_MousePress(Handle* handle, int button, int action, int mods)
+{
+    GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
+    if (!window) {
+        return;
+    }
+
+    if (action == GLFW_PRESS)
+        window->DispatchMousePress(*window, (MouseCode)button);
+    else if (action == GLFW_RELEASE)
+        window->DispatchMouseRelease(*window, (MouseCode)button);
+}
+
+
+void GLFWWindow::Event_MouseMove(Handle* handle, double xPos, double yPos)
+{
+    GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
+    if (window) {
+        window->DispatchMouseMove(*window, xPos, yPos);
+    }
+}
+
+
 void GLFWWindow::Event_KeyPress(Handle* handle, int key, int scancode, int action, int mods)
 {
     GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
@@ -208,21 +263,12 @@ void GLFWWindow::Event_KeyPress(Handle* handle, int key, int scancode, int actio
         return;
     }
 
-    if (action == GLFW_PRESS) {
-        window->DispatchKeyPress(key);
-        return;
-    }
-    if (action == GLFW_RELEASE) {
-        window->DispatchKeyRelease(key);
-        return;
-    }
-    if (action == GLFW_REPEAT) {
-        window->DispatchKeyRepeat(key);
-        return;
-    }
-
-    // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    //     glfwSetWindowShouldClose(window, GLFW_TRUE);
+    if (action == GLFW_PRESS)
+        window->DispatchKeyPress(*window, (KeyCode)key);
+    else if (action == GLFW_RELEASE)
+        window->DispatchKeyRelease(*window, (KeyCode)key);
+    else if (action == GLFW_REPEAT)
+        window->DispatchKeyRepeat(*window, (KeyCode)key);
 }
 
 

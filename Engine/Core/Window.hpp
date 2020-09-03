@@ -2,13 +2,13 @@
 #pragma once
 
 #include "EngineCommon.h"
+#include "Events/EventSource.hpp"
 
 namespace Game
 {
     class Layer;
-    class EventListener;
 
-    class Window
+    class Window : public EventSource
     {
     public:
         Window(const std::string& name);
@@ -30,9 +30,6 @@ namespace Game
         void PushOverlay(Layer* overlay);
         void PopOverlay(Layer* overlay);
 
-        void PushListener(EventListener* listener);
-        void PopListener(EventListener* listener);
-
         static Window* Create(const std::string& name, Window* parent = nullptr);
 
         bool VSyncEnabled() { return vsync; }
@@ -42,14 +39,9 @@ namespace Game
         bool vsync = false;
         std::string name;
 
-        void DispatchKeyPress(int key);
-        void DispatchKeyRelease(int key);
-        void DispatchKeyRepeat(int key);
-
     private:
         unsigned int layerInsertIndex = 0;
         std::vector<Layer*> layers;
-        std::vector<EventListener*> eventListeners;
     };
 
 }

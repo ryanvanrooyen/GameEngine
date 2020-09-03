@@ -48,9 +48,9 @@ TestSecondaryWindow::TestSecondaryWindow()
 }
 
 
-bool TestSecondaryWindow::OnKeyPress(Window& window, int key)
+bool TestSecondaryWindow::OnKeyPress(Window& window, KeyCode key)
 {
-    if (key == 32)  { // Spacebar Key
+    if (key == KeyCode::Space)  {
         TRACE("Spacebar pressed!");
         if (secondaryWindow)
         {

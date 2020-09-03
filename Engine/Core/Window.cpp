@@ -107,41 +107,6 @@ void Window::PopOverlay(Layer* overlay)
 }
 
 
-void Window::PushListener(EventListener* listener)
-{
-    if (listener)
-    {
-        // Push listeners at front of list so listeners on top get first dibs at handling events:
-        eventListeners.insert(eventListeners.begin(), listener);
-    }
-}
-
-
-void Window::PopListener(EventListener* listener)
-{
-    if (listener)
-    {
-        auto it = std::find(eventListeners.begin(), eventListeners.end(), listener);
-        if (it != eventListeners.end())
-        {
-            eventListeners.erase(it);
-        }
-    }
-}
-
-
-#define DISPATCH(Event, listeners, ...)\
-    for (EventListener* listener : listeners)\
-    {\
-        if (listener->Event(*this, __VA_ARGS__))\
-            break;\
-    }
-
-
-void Window::DispatchKeyPress(int key) { TRACE("Dispatching Event: {} KeyPress {}", name, key); DISPATCH(OnKeyPress, eventListeners, key); }
-void Window::DispatchKeyRelease(int key) { TRACE("Dispatching Event: {} KeyRelease {}", name, key); DISPATCH(OnKeyRelease, eventListeners, key); }
-void Window::DispatchKeyRepeat(int key) { TRACE("Dispatching Event: {} KeyRepeat {}", name, key); DISPATCH(OnKeyRepeat, eventListeners, key); }
-
 
 Window::~Window()
 {
