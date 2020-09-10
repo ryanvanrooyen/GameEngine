@@ -1,103 +1,56 @@
 
 #include "EngineCommon.h"
 #include "EventSource.hpp"
-#include "Listeners.hpp"
-#include "Core/Window.hpp"
-#include "Core/logging.h"
 
 namespace Game
 {
 
-void EventSource::PushListener(EventListener* listener)
-{
-    if (listener)
-    {
-        // Push listeners at front of list so listeners on top get first dibs at handling events:
-        eventListeners.insert(eventListeners.begin(), listener);
+// Push listeners at front of list so listeners on top get first dibs at handling events:
+#define DEFINE_PUSH(Listener, listeners)\
+    void EventSource::PushListener(Listener* listener)\
+    {\
+        if (listener)\
+            listeners.insert(listeners.begin(), listener);\
     }
-}
 
 
-void EventSource::PopListener(EventListener* listener)
-{
-    if (listener)
-    {
-        auto it = std::find(eventListeners.begin(), eventListeners.end(), listener);
-        if (it != eventListeners.end())
-        {
-            eventListeners.erase(it);
-        }
+#define DEFINE_POP(Listener, listeners)\
+    void EventSource::PopListener(Listener* listener)\
+    {\
+        if (listener)\
+        {\
+            auto it = std::find(listeners.begin(), listeners.end(), listener);\
+            if (it != listeners.end())\
+                listeners.erase(it);\
+        }\
     }
-}
 
 
 #define DISPATCH(Event, listeners, ...)\
-    for (EventListener* listener : listeners)\
+    for (auto& listener : listeners)\
     {\
         if (listener->Event(__VA_ARGS__))\
-            break;\
-    }
+            return true;\
+    }\
+    return false;
 
 
-void EventSource::DispatchWindowClose(Window& window)
-{
-    TRACE("Dispatching Event: {} WindowClose", window.Name());
-    DISPATCH(OnWindowClose, eventListeners, window);
-}
-
-void EventSource::DispatchWindowResize(Window& window, int width, int height)
-{
-    // TRACE("Dispatching Event: {} WindowResize ({}, {})", window.Name(), width, height);
-    DISPATCH(OnWindowResize, eventListeners, window, width, height);
-}
+DEFINE_PUSH(WindowListener, windowListeners);
+DEFINE_PUSH(MouseListener, mouseListeners);
+DEFINE_PUSH(KeyboardListener, keyboardListeners);
+DEFINE_POP(WindowListener, windowListeners);
+DEFINE_POP(MouseListener, mouseListeners);
+DEFINE_POP(KeyboardListener, keyboardListeners);
 
 
-void EventSource::DispatchWindowScroll(Window& window, double xOffset, double yOffset)
-{
-    // TRACE("Dispatching Event: {} WindowScroll ({}, {})", window.Name(), xOffset, yOffset);
-    DISPATCH(OnWindowScroll, eventListeners, window, xOffset, yOffset);
-}
-
-
-void EventSource::DispatchMouseMove(Window& window, double xPos, double yPos)
-{
-    // TRACE("Dispatching Event: {} WindowMove ({}, {})", window.Name(), xPos, yPos);
-    DISPATCH(OnMouseMove, eventListeners, window, xPos, yPos);
-}
-
-
-void EventSource::DispatchMousePress(Window& window, MouseCode button)
-{
-    TRACE("Dispatching Event: {} MousePress {}", window.Name(), button);
-    DISPATCH(OnMousePress, eventListeners, window, button);
-}
-
-
-void EventSource::DispatchMouseRelease(Window& window, MouseCode button)
-{
-    TRACE("Dispatching Event: {} MouseRelease {}", window.Name(), button);
-    DISPATCH(OnMouseRelease, eventListeners, window, button);
-}
-
-
-void EventSource::DispatchKeyPress(Window& window, KeyCode key)
-{
-    TRACE("Dispatching Event: {} KeyPress {}", window.Name(), key);
-    DISPATCH(OnKeyPress, eventListeners, window, key);
-}
-
-
-void EventSource::DispatchKeyRelease(Window& window, KeyCode key)
-{
-    TRACE("Dispatching Event: {} KeyRelease {}", window.Name(), key);
-    DISPATCH(OnKeyRelease, eventListeners, window, key);
-}
-
-
-void EventSource::DispatchKeyRepeat(Window& window, KeyCode key)
-{
-    TRACE("Dispatching Event: {} KeyRepeat {}", window.Name(), key);
-    DISPATCH(OnKeyRepeat, eventListeners, window, key);
-}
+bool EventSource::DispatchWindowClose(Window& window) { DISPATCH(OnWindowClose, windowListeners, window); }
+bool EventSource::DispatchWindowResize(Window& window, int width, int height) { DISPATCH(OnWindowResize, windowListeners, window, width, height); }
+bool EventSource::DispatchWindowScroll(Window& window, double xOffset, double yOffset) { DISPATCH(OnWindowScroll, windowListeners, window, xOffset, yOffset); }
+bool EventSource::DispatchMouseMove(Window& window, double xPos, double yPos) { DISPATCH(OnMouseMove, mouseListeners, window, xPos, yPos); }
+bool EventSource::DispatchMousePress(Window& window, MouseCode button) { DISPATCH(OnMousePress, mouseListeners, window, button); }
+bool EventSource::DispatchMouseRelease(Window& window, MouseCode button) { DISPATCH(OnMouseRelease, mouseListeners, window, button); }
+bool EventSource::DispatchKeyPress(Window& window, KeyCode key) { DISPATCH(OnKeyPress, keyboardListeners, window, key); }
+bool EventSource::DispatchKeyRelease(Window& window, KeyCode key) { DISPATCH(OnKeyRelease, keyboardListeners, window, key); }
+bool EventSource::DispatchKeyRepeat(Window& window, KeyCode key) { DISPATCH(OnKeyRepeat, keyboardListeners, window, key); }
 
 }

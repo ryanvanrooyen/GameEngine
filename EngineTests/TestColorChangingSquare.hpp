@@ -1,5 +1,5 @@
 
-#include "Core/Layer.hpp"
+#include "Test.hpp"
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture.hpp"
 #include "Rendering/VertexBuffer.hpp"
@@ -10,16 +10,17 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 
-namespace Game::Test
+namespace Game
 {
 
-class TestColorChangingSquare : public Layer
+class TestColorChangingSquare : public Test
 {
 public:
     TestColorChangingSquare();
     const char* LayerName() const override { return "Color Changing Square"; }
-    void OnUpdate(float deltaTime) override;
-    void OnGUIRender(Window& window) override;
+    void OnUpdate(Window& window, float deltaTime) override;
+    void OnTestGUI(Window& window, float deltaTime) override;
+
 private:
     Shader shader;
     VertexBuffer vertexBuffer;

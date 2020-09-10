@@ -2,33 +2,53 @@
 #pragma once
 
 #include "EngineCommon.h"
-#include "Core/Input.hpp"
+#include "Listeners.hpp"
 
 namespace Game
 {
     class Window;
-    class EventListener;
 
     class EventSource
     {
     public:
-        void PushListener(EventListener* listener);
-        void PopListener(EventListener* listener);
+        virtual ~EventSource() = default;
+
+        void PushListener(WindowListener* listener);
+        void PushListener(MouseListener* listener);
+        void PushListener(KeyboardListener* listener);
+        void PushListener(EventListener* listener)
+        {
+            PushListener((WindowListener*)listener);
+            PushListener((MouseListener*)listener);
+            PushListener((KeyboardListener*)listener);
+        }
+
+        void PopListener(WindowListener* listener);
+        void PopListener(MouseListener* listener);
+        void PopListener(KeyboardListener* listener);
+        void PopListener(EventListener* listener)
+        {
+            PopListener((WindowListener*)listener);
+            PopListener((MouseListener*)listener);
+            PopListener((KeyboardListener*)listener);
+        }
 
     protected:
-        void DispatchWindowClose(Window& window);
-        void DispatchWindowResize(Window& window, int width, int height);
-        void DispatchWindowScroll(Window& window, double xOffset, double yOffset);
+        bool DispatchWindowClose(Window& window);
+        bool DispatchWindowResize(Window& window, int width, int height);
+        bool DispatchWindowScroll(Window& window, double xOffset, double yOffset);
 
-        void DispatchMouseMove(Window& window, double xPos, double yPos);
-        void DispatchMousePress(Window& window, MouseCode button);
-        void DispatchMouseRelease(Window& window, MouseCode button);
+        bool DispatchMouseMove(Window& window, double xPos, double yPos);
+        bool DispatchMousePress(Window& window, MouseCode button);
+        bool DispatchMouseRelease(Window& window, MouseCode button);
 
-        void DispatchKeyPress(Window& window, KeyCode key);
-        void DispatchKeyRelease(Window& window, KeyCode key);
-        void DispatchKeyRepeat(Window& window, KeyCode key);
+        bool DispatchKeyPress(Window& window, KeyCode key);
+        bool DispatchKeyRelease(Window& window, KeyCode key);
+        bool DispatchKeyRepeat(Window& window, KeyCode key);
 
     private:
-        std::vector<EventListener*> eventListeners;
+        std::vector<WindowListener*> windowListeners;
+        std::vector<MouseListener*> mouseListeners;
+        std::vector<KeyboardListener*> keyboardListeners;
     };
 }

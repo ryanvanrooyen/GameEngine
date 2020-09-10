@@ -1,10 +1,11 @@
 
 #include "TestSingleImage.hpp"
 #include "Rendering/Renderer.hpp"
+#include "Core/Window.hpp"
 #include "imgui.h"
 
 
-namespace Game::Test
+namespace Game
 {
 
 static float width = 100.f;
@@ -47,7 +48,7 @@ TestSingleImage::TestSingleImage()
 }
 
 
-void TestSingleImage::OnUpdate(float deltaTime)
+void TestSingleImage::OnUpdate(Window& window, float deltaTime)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
@@ -59,12 +60,13 @@ void TestSingleImage::OnUpdate(float deltaTime)
 }
 
 
-void TestSingleImage::OnGUIRender(Window& window)
+void TestSingleImage::OnTestGUI(Window& window, float deltaTime)
 {
+    ImGui::NewLine();
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position:");
-    ImGui::SliderFloat("##X", &translation.x, 0.f, 960.f - width, "X: %.0f");
-    ImGui::SliderFloat("##Y", &translation.y, 0.f, 540.f - height, "Y: %.0f");
+    ImGui::SliderFloat("##X", &translation.x, 0.f, window.Width() - width, "X: %.0f");
+    ImGui::SliderFloat("##Y", &translation.y, 0.f, window.Height() - height, "Y: %.0f");
     ImGui::PopItemWidth();
 }
 

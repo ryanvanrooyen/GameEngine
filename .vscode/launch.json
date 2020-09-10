@@ -4,7 +4,7 @@
             "name": "Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/GameEngine.app",
+            "program": "${workspaceFolder}/bin/EngineTests",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

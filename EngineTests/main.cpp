@@ -1,5 +1,5 @@
 
-#include "Core/logging.h"
+#include "EngineCommon.h"
 #include "Core/Engine.hpp"
 #include "TestMenu.hpp"
 #include "TestColorChangingSquare.hpp"
@@ -13,10 +13,10 @@ int main()
 
     Game::Engine* engine = new Game::Engine();
 
-    engine->PushLayer(new Game::Test::TestMenu());
-    // engine->PushLayer(new Game::Test::TestColorChangingSquare());
-    // engine->secondaryWindow->PushLayer(new Game::Test::TestSingleImage());
-    // engine->secondaryWindow->PushLayer(new Game::Test::TestColorChangingSquare());
+    engine->PushLayer(std::make_shared<Game::TestMenu>());
+    // engine->PushLayer(new Game::TestColorChangingSquare());
+    // engine->secondaryWindow->PushLayer(new Game::TestSingleImage());
+    // engine->secondaryWindow->PushLayer(new Game::TestColorChangingSquare());
 
     int returnCode = engine->Run();
     delete engine;

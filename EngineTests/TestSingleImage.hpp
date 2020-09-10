@@ -1,5 +1,5 @@
 
-#include "Core/Layer.hpp"
+#include "Test.hpp"
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture.hpp"
 #include "Rendering/VertexBuffer.hpp"
@@ -9,17 +9,16 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-namespace Game::Test
+namespace Game
 {
 
-class TestSingleImage : public Layer
+class TestSingleImage : public Test
 {
 public:
     TestSingleImage();
     const char* LayerName() const override { return "Single Texture"; }
-    void OnUpdate(float deltaTime) override;
-    void OnGUIRender(Window& window) override;
-    ~TestSingleImage() {}
+    void OnUpdate(Window& window, float deltaTime) override;
+    void OnTestGUI(Window& window, float deltaTime) override;
 
 private:
     Shader shader;

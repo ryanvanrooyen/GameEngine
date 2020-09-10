@@ -1,11 +1,11 @@
 
+#include "EngineCommon.h"
 #include "TestSecondaryWindow.hpp"
 #include "Rendering/Renderer.hpp"
-#include "Core/logging.h"
 #include "imgui.h"
 
 
-namespace Game::Test
+namespace Game
 {
 
 static float width = 100.f;
@@ -68,7 +68,7 @@ bool TestSecondaryWindow::OnKeyPress(Window& window, KeyCode key)
 }
 
 
-void TestSecondaryWindow::OnUpdate(float deltaTime)
+void TestSecondaryWindow::OnUpdate(Window& window, float deltaTime)
 {
     if (secondaryWindow)
     {
@@ -85,7 +85,7 @@ void TestSecondaryWindow::OnUpdate(float deltaTime)
 }
 
 
-void TestSecondaryWindow::OnGUIRender(Window& window)
+void TestSecondaryWindow::OnTestGUI(Window& window, float deltaTime)
 {
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position:");

@@ -4,7 +4,7 @@
 #include "Rendering/Renderer.hpp"
 #include "imgui.h"
 
-namespace Game::Test
+namespace Game
 {
 
 static float width = 100.f;
@@ -44,7 +44,7 @@ TestColorChangingSquare::TestColorChangingSquare()
 }
 
 
-void TestColorChangingSquare::OnUpdate(float deltaTime)
+void TestColorChangingSquare::OnUpdate(Window& window, float deltaTime)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
@@ -61,15 +61,15 @@ void TestColorChangingSquare::OnUpdate(float deltaTime)
 }
 
 
-void TestColorChangingSquare::OnGUIRender(Window& window)
+void TestColorChangingSquare::OnTestGUI(Window& window, float deltaTime)
 {
-    ImGui::Begin(("##Window_" + window.Name()).c_str());
+    // ImGui::Begin(("##Window_" + window.Name()).c_str());
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position:");
     ImGui::SliderFloat(("##X_" + window.Name()).c_str(), &translation.x, 0.f, 960.f - width, "X: %.0f");
     ImGui::SliderFloat(("##Y_" + window.Name()).c_str(), &translation.y, 0.f, 540.f - height, "Y: %.0f");
     ImGui::PopItemWidth();
-    ImGui::End();
+    // ImGui::End();
 }
 
 }

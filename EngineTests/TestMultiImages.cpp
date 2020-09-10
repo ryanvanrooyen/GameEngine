@@ -4,7 +4,7 @@
 #include "imgui.h"
 
 
-namespace Game::Test
+namespace Game
 {
 
 static float width = 100.f;
@@ -48,7 +48,7 @@ TestMultiImages::TestMultiImages()
 }
 
 
-void TestMultiImages::OnUpdate(float deltaTime)
+void TestMultiImages::OnUpdate(Window& window, float deltaTime)
 {
     glm::mat4 model1 = glm::translate(glm::mat4(1.f), translation1);
     glm::mat4 mvp1 = proj * view * model1;
@@ -66,7 +66,7 @@ void TestMultiImages::OnUpdate(float deltaTime)
 }
 
 
-void TestMultiImages::OnGUIRender(Window& window)
+void TestMultiImages::OnTestGUI(Window& window, float deltaTime)
 {
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position 1:");

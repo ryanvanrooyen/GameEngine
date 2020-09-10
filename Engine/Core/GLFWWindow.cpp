@@ -5,7 +5,6 @@
 #include <GLFW/glfw3.h>
 #include "examples/imgui_impl_glfw.h"
 #include "examples/imgui_impl_opengl3.h"
-#include "Core/logging.h"
 
 
 namespace Game
@@ -17,8 +16,8 @@ static void error_callback(int error, const char* description)
 }
 
 
-GLFWWindow::GLFWWindow(GLFWWindow::Handle* windowHandle, const std::string& name)
-    : Window(name) , windowHandle(windowHandle)
+GLFWWindow::GLFWWindow(GLFWWindow::Handle* windowHandle, const std::string& name, int width, int height)
+    : Window(name, width, height) , windowHandle(windowHandle)
 {
 }
 
@@ -74,7 +73,11 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
 
     // Create a windowed mode window and its OpenGL context:
     Handle* parentWindowHandle = parentWindow ? parentWindow->windowHandle : NULL;
-    Handle* windowHandle = glfwCreateWindow(960, 540, name.c_str(), NULL, parentWindowHandle);
+
+    int width = 1920;
+    int height = 1080;
+
+    Handle* windowHandle = glfwCreateWindow(width, height, name.c_str(), NULL, parentWindowHandle);
     if (!windowHandle)
     {
         ERROR("GLFW Window creation failed.");
@@ -134,7 +137,7 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     // // Setup ImGui binding
     // ImGui_ImplGlfwGL3_Init(window2, true);
 
-    GLFWWindow* newWindow = new GLFWWindow(windowHandle, name);
+    GLFWWindow* newWindow = new GLFWWindow(windowHandle, name, width, height);
     newWindow->imguiContext = imguiContext;
 
     glfwSetWindowUserPointer(windowHandle, newWindow);
@@ -220,6 +223,8 @@ void GLFWWindow::Event_WindowResize(Handle* handle, int width, int height)
     GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
     if (window) {
         window->DispatchWindowResize(*window, width, height);
+        window->width = width;
+        window->height = height;
     }
 }
 

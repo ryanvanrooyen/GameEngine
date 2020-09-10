@@ -1,7 +1,6 @@
 
 #include "EngineCommon.h"
 #include "Window.hpp"
-#include "logging.h"
 #include "Layer.hpp"
 #include "Events/Listeners.hpp"
 #include "GLFWWindow.hpp"
@@ -14,34 +13,53 @@ namespace Game
 Window* Window::Create(const std::string& name, Window* parent)
 {
     // TODO: This should use a preprocessor flag to decide what type of window to create:
-    GLFWWindow* glfwParent = dynamic_cast<GLFWWindow*>(parent);
-    return GLFWWindow::Create(name, glfwParent);
+    return GLFWWindow::Create(name, (GLFWWindow*)parent);
 }
 
 
-Window::Window(const std::string& name) : name(name)
+Window::Window(const std::string& name, int width, int height)
+    : name(name), width(width), height(height)
 {
 }
 
 
 void Window::Update(float deltaTime)
 {
-    // PollInput();
-    // Clear();
+    // Make sure to remove any pending layers before checking input:
+    if (hasLayersToRemove)
+    {
+        RemovePendingLayers();
+        hasLayersToRemove = false;
+    }
 
-    for (Layer* layer : layers)
-        layer->OnUpdate(deltaTime);
+    PollInput();
+    Clear();
+
+    for (const std::shared_ptr<Layer>& layer : layers)
+    {
+        if (layer->Enabled())
+            layer->OnUpdate(*this, deltaTime);
+    }
 
     BeginGUI();
-    for (Layer* layer : layers)
-        layer->OnGUIRender(*this);
+    for (const std::shared_ptr<Layer>& layer : layers)
+    {
+        if (layer->Enabled())
+            layer->OnGUIRender(*this, deltaTime);
+    }
     EndGUI();
 
-    // SwapBuffers();
+    SwapBuffers();
 }
 
 
-void Window::PushLayer(Layer* layer)
+void Window::Close()
+{
+    DispatchWindowClose(*this);
+}
+
+
+void Window::PushLayer(const std::shared_ptr<Layer>& layer)
 {
     if (layer)
     {
@@ -49,30 +67,94 @@ void Window::PushLayer(Layer* layer)
         layers.emplace(layers.begin() + layerInsertIndex, layer);
 		layerInsertIndex++;
         layer->OnAttach(*this);
-
-        if (EventListener* listener = dynamic_cast<EventListener*>(layer))
-            PushListener(listener);
+        PushListener(layer.get());
     }
 }
 
 
-void Window::PushOverlay(Layer* overlay)
+void Window::PushOverlay(const std::shared_ptr<Layer>& overlay)
 {
     if (overlay)
     {
         TRACE("Attaching overlay: {}", overlay->LayerName());
         layers.emplace_back(overlay);
         overlay->OnAttach(*this);
-
-        if (EventListener* listener = dynamic_cast<EventListener*>(overlay))
-            PushListener(listener);
+        PushListener(overlay.get());
     }
 }
 
 
-void Window::PopLayer(Layer* layer)
+// void Window::PopLayer(Layer* layer)
+// {
+//     if (!layer)
+//         return;
+//     auto it = std::find_if(layers.begin(), layers.begin() + layerInsertIndex, [layer](std::shared_ptr<Layer> l) {return layer == l.get();});
+//     if (it != layers.begin() + layerInsertIndex)
+//     {
+//         auto it2 = std::find(layersToRemove.begin(), layersToRemove.end(), *it);
+//         bool isNotAlreadyPendingToBeRemoveed = it2 == layersToRemove.end();
+//         if (isNotAlreadyPendingToBeRemoveed)
+//         {
+//             layersToRemove.push_back(*it);
+//             hasLayersToRemove = true;
+//         }
+//     }
+// }
+
+
+void Window::PopLayer(const std::shared_ptr<Layer>& layer)
 {
-    if (layer)
+    if (!layer)
+        return;
+
+    auto it = std::find(layers.begin(), layers.begin() + layerInsertIndex, layer);
+    if (it != layers.begin() + layerInsertIndex)
+    {
+        auto it2 = std::find(layersToRemove.begin(), layersToRemove.end(), *it);
+        bool isNotAlreadyPendingToBeRemoveed = it2 == layersToRemove.end();
+        if (isNotAlreadyPendingToBeRemoveed)
+        {
+            layersToRemove.push_back(*it);
+            hasLayersToRemove = true;
+        }
+    }
+}
+
+
+void Window::PopOverlay(const std::shared_ptr<Layer>& overlay)
+{
+    if (!overlay)
+        return;
+
+    auto it = std::find(layers.begin() + layerInsertIndex, layers.end(), overlay);
+    if (it != layers.end())
+    {
+        auto it2 = std::find(overlaysToRemove.begin(), overlaysToRemove.end(), *it);
+        bool isNotAlreadyPendingToBeRemoveed = it2 == overlaysToRemove.end();
+        if (isNotAlreadyPendingToBeRemoveed)
+        {
+            overlaysToRemove.push_back(*it);
+            hasLayersToRemove = true;
+        }
+    }
+}
+
+
+void Window::RemovePendingLayers()
+{
+    for (std::shared_ptr<Layer>& layer : overlaysToRemove)
+    {
+        auto it = std::find(layers.begin() + layerInsertIndex, layers.begin(), layer);
+		if (it != layers.end())
+		{
+            TRACE("Detaching layer: {}", layer->LayerName());
+			layer->OnDetach(*this);
+			layers.erase(it);
+            PopListener(layer.get());
+		}
+    }
+
+    for (std::shared_ptr<Layer>& layer : layersToRemove)
     {
         auto it = std::find(layers.begin(), layers.begin() + layerInsertIndex, layer);
 		if (it != layers.begin() + layerInsertIndex)
@@ -81,41 +163,21 @@ void Window::PopLayer(Layer* layer)
 			layer->OnDetach(*this);
 			layers.erase(it);
 			layerInsertIndex--;
-
-            if (EventListener* listener = dynamic_cast<EventListener*>(layer))
-                PopListener(listener);
+            PopListener(layer.get());
 		}
     }
+
+    overlaysToRemove.clear();
+    layersToRemove.clear();
 }
-
-
-void Window::PopOverlay(Layer* overlay)
-{
-    if (overlay)
-    {
-        auto it = std::find(layers.begin() + layerInsertIndex, layers.end(), overlay);
-        if (it != layers.end())
-        {
-            TRACE("Detaching overlay: {}", overlay->LayerName());
-            overlay->OnDetach(*this);
-            layers.erase(it);
-
-            if (EventListener* listener = dynamic_cast<EventListener*>(overlay))
-                PopListener(listener);
-        }
-    }
-}
-
 
 
 Window::~Window()
 {
-    for (Layer* layer : layers)
+    for (std::shared_ptr<Layer>& layer : layers)
     {
         TRACE("Detaching layer: {}", layer->LayerName());
         layer->OnDetach(*this);
-        TRACE("Deleting layer: {}", layer->LayerName());
-        delete layer;
     }
 
     TRACE("Deleting window: {}", name);

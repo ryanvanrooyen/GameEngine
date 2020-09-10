@@ -1,7 +1,6 @@
 
-#include "Core/Layer.hpp"
+#include "Test.hpp"
 #include "Core/Window.hpp"
-#include "Events/Listeners.hpp"
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture.hpp"
 #include "Rendering/VertexBuffer.hpp"
@@ -12,17 +11,16 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 
-
-namespace Game::Test
+namespace Game
 {
 
-class TestSecondaryWindow : public Layer, public EventListener
+class TestSecondaryWindow : public Test
 {
 public:
     TestSecondaryWindow();
     const char* LayerName() const override { return "Secondary Window"; }
-    void OnUpdate(float deltaTime) override;
-    void OnGUIRender(Window& window) override;
+    void OnUpdate(Window& window, float deltaTime) override;
+    void OnTestGUI(Window& window, float deltaTime) override;
     ~TestSecondaryWindow();
 
     bool OnKeyPress(Window& window, KeyCode key) override;

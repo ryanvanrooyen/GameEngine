@@ -14,7 +14,7 @@ namespace Game
     public:
         using Handle = GLFWwindow;
 
-        GLFWWindow(Handle* windowHandle, const std::string& name);
+        GLFWWindow(Handle* windowHandle, const std::string& name, int width, int height);
         virtual ~GLFWWindow();
 
         virtual void MakeCurrent() override;

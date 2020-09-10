@@ -12,3 +12,5 @@
 #include <filesystem>
 #include <exception>
 
+// Common Engine files:
+#include "Core/logging.h"

@@ -2,7 +2,6 @@
 #include "EngineCommon.h"
 #include "Engine.hpp"
 #include "Window.hpp"
-#include "Core/logging.h"
 
 namespace Game
 {
@@ -24,14 +23,9 @@ int Engine::Run()
             return 1;
 
         isRunning = true;
-
         while (isRunning)
         {
-            // mainWindow->MakeCurrent();
-            mainWindow->PollInput();
-            mainWindow->Clear();
             mainWindow->Update(0.f);
-            mainWindow->SwapBuffers();
 
             // secondaryWindow->MakeCurrent();
             // secondaryWindow->PollInput();
@@ -77,28 +71,28 @@ bool Engine::OnKeyPress(Window& window, KeyCode key)
 }
 
 
-void Engine::PushLayer(Layer* layer)
+void Engine::PushLayer(const std::shared_ptr<Layer>& layer)
 {
     if (mainWindow)
         mainWindow->PushLayer(layer);
 }
 
 
-void Engine::PopLayer(Layer* layer)
+void Engine::PopLayer(const std::shared_ptr<Layer>& layer)
 {
     if (mainWindow)
         mainWindow->PopLayer(layer);
 }
 
 
-void Engine::PushOverlay(Layer* overlay)
+void Engine::PushOverlay(const std::shared_ptr<Layer>& overlay)
 {
     if (mainWindow)
         mainWindow->PushOverlay(overlay);
 }
 
 
-void Engine::PopOverlay(Layer* overlay)
+void Engine::PopOverlay(const std::shared_ptr<Layer>& overlay)
 {
     if (mainWindow)
         mainWindow->PopOverlay(overlay);

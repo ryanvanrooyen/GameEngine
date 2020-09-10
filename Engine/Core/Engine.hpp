@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "EngineCommon.h"
 #include "Events/Listeners.hpp"
 
 namespace Game
@@ -13,10 +14,10 @@ namespace Game
     public:
         Engine();
 
-        void PushLayer(Layer* layer);
-        void PopLayer(Layer* layer);
-        void PushOverlay(Layer* overlay);
-        void PopOverlay(Layer* overlay);
+        void PushLayer(const std::shared_ptr<Layer>& layer);
+        void PushOverlay(const std::shared_ptr<Layer>& overlay);
+        void PopLayer(const std::shared_ptr<Layer>& layer);
+        void PopOverlay(const std::shared_ptr<Layer>& overlay);
 
         int Run();
         bool IsRunning() { return isRunning; }

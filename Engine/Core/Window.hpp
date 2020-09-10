@@ -11,7 +11,7 @@ namespace Game
     class Window : public EventSource
     {
     public:
-        Window(const std::string& name);
+        Window(const std::string& name, int width, int height);
         virtual ~Window();
 
         std::string Name() { return name; }
@@ -25,23 +25,32 @@ namespace Game
         virtual void BeginGUI() = 0;
         virtual void EndGUI() = 0;
 
-        void PushLayer(Layer* layer);
-        void PopLayer(Layer* layer);
-        void PushOverlay(Layer* overlay);
-        void PopOverlay(Layer* overlay);
+        void PushLayer(const std::shared_ptr<Layer>& layer);
+        void PushOverlay(const std::shared_ptr<Layer>& overlay);
+        void PopLayer(const std::shared_ptr<Layer>& layer);
+        void PopOverlay(const std::shared_ptr<Layer>& overlay);
 
         static Window* Create(const std::string& name, Window* parent = nullptr);
 
         bool VSyncEnabled() { return vsync; }
         virtual void SetVSyncEnabled(bool enabled) = 0;
+        void Close();
+
+        int Width() { return width; }
+        int Height() { return height; }
 
     protected:
-        bool vsync = false;
         std::string name;
+        bool vsync = false;
+        int width, height;
 
     private:
         unsigned int layerInsertIndex = 0;
-        std::vector<Layer*> layers;
+        std::vector<std::shared_ptr<Layer>> layers;
+        std::vector<std::shared_ptr<Layer>> layersToRemove;
+        std::vector<std::shared_ptr<Layer>> overlaysToRemove;
+        bool hasLayersToRemove = false;
+        void RemovePendingLayers();
     };
 
 }

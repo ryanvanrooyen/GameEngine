@@ -1,5 +1,6 @@
 
 #include "TestMenu.hpp"
+#include "Test.hpp"
 #include "TestColorChangingSquare.hpp"
 #include "TestSingleImage.hpp"
 #include "TestMultiImages.hpp"
@@ -7,25 +8,19 @@
 #include "imgui.h"
 
 
-namespace Game::Test
+namespace Game
 {
 
-TestMenu::~TestMenu()
+void TestMenu::OnGUISelectTest(Window& window)
 {
-    if (test)
-        delete test;
-}
-
-
-void TestMenu::OnAttach(Window& window)
-{
-    parentWindow = &window;
-}
-
-
-void TestMenu::OnDetach(Window& window)
-{
-    parentWindow = nullptr;
+    if (ImGui::Button("Color Changing Square"))
+        SetChildTest(window, std::make_shared<TestColorChangingSquare>());
+    if (ImGui::Button("Single Texture"))
+        SetChildTest(window, std::make_shared<TestSingleImage>());
+    if (ImGui::Button("Duplicate Textures"))
+        SetChildTest(window, std::make_shared<TestMultiImages>());
+    if (ImGui::Button("Secondary Window"))
+        SetChildTest(window, std::make_shared<TestSecondaryWindow>());
 }
 
 
@@ -33,60 +28,43 @@ bool TestMenu::OnKeyPress(Window& window, KeyCode key)
 {
     // Allow ESC to be a back button if we have an active test:
     if (test && key == KeyCode::Escape)  {
-        SetChildTest(nullptr);
+        SetChildTest(window, nullptr);
         return true;
     }
     return false;
 }
 
 
-void TestMenu::SetChildTest(Layer* newTest)
+void TestMenu::SetChildTest(Window& window, const std::shared_ptr<Test>& newTest)
 {
-    if (!parentWindow)
-        return;
     if (!test && !newTest)
         return;
 
     if (test)
-    {
-        parentWindow->PopLayer(test);
-        delete test;
-    }
+        window.PopLayer(test);
 
     test = newTest;
-    parentWindow->PushLayer(test);
+    if (test)
+    {
+        test->menu = this;
+        window.PushLayer(test);
+    }
 }
 
 
-void TestMenu::OnGUIRender(Window& window)
+void TestMenu::OnGUIRender(Window& window, float deltaTime)
 {
-    if (!parentWindow)
-        return;
-
-    if (test)
-    {
-        ImGui::NewLine();
-        if (ImGui::Button("Back##TestMenuBackParent"))
-        {
-            SetChildTest(nullptr);
-        }
-    }
-    else
+    if (!test)
     {
         // ImGui::SetNextWindowPos({0.f, 0.f});
-        std::string imGUIName = parentWindow->Name() + "Test";
-        ImGui::Begin(imGUIName.c_str());
-
-        if (ImGui::Button("Color Changing Square"))
-            SetChildTest(new TestColorChangingSquare());
-        if (ImGui::Button("Single Texture"))
-            SetChildTest(new TestSingleImage());
-        if (ImGui::Button("Duplicate Textures"))
-            SetChildTest(new TestMultiImages());
-        if (ImGui::Button("Secondary Window"))
-            SetChildTest(new TestSecondaryWindow());
+        ImGui::Begin("Test Menu");
+        OnGUISelectTest(window);
         ImGui::NewLine();
 
+        if (ImGui::Button("Quit"))
+            window.Close();
+
+        ImGui::NewLine();
         ImGui::Text("%.1f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::End();
     }
