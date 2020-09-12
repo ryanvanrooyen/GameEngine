@@ -17,7 +17,8 @@ namespace Game
         bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override;
 
     private:
-        std::unique_ptr<Test> test = nullptr;
+        Test* test = nullptr;
         void OnGUISelectTest(Window& window);
+        bool DestroyTest(Window& window);
     };
 }

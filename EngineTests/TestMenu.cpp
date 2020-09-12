@@ -14,32 +14,40 @@ namespace Game
 void TestMenu::OnGUISelectTest(Window& window)
 {
     if (ImGui::Button("Color Changing Square"))
-        test = std::make_unique<TestColorChangingSquare>();
+        test = new TestColorChangingSquare();
     if (ImGui::Button("Single Texture"))
-        test = std::make_unique<TestSingleImage>();
+        test = new TestSingleImage();
     if (ImGui::Button("Duplicate Textures"))
-        test = std::make_unique<TestMultiImages>();
+        test = new TestMultiImages();
     if (ImGui::Button("Secondary Window"))
-        test = std::make_unique<TestSecondaryWindow>();
+        test = new TestSecondaryWindow();
 
     if (test)
     {
-        PushListener(test.get());
+        PushListener(test);
         test->OnAttach(window);
     }
+}
+
+
+bool TestMenu::DestroyTest(Window& window)
+{
+    if (!test)
+        return false;
+
+    PopListener(test);
+    test->OnDetach(window);
+    delete test;
+    test = nullptr;
+    return true;
 }
 
 
 bool TestMenu::OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods)
 {
     // Allow ESC to be a back button if we have an active test:
-    if (test && key == KeyCode::Escape)
-    {
-        PopListener(test.get());
-        test->OnDetach(window);
-        test = nullptr;
-        return true;
-    }
+    if (key == KeyCode::Escape)
+        return DestroyTest(window);
     return false;
 }
 
@@ -58,15 +66,9 @@ void TestMenu::OnGUIRender(Window& window, float deltaTime)
     if (test)
     {
         if (ImGui::Button("< Back"))
-        {
-            PopListener(test.get());
-            test->OnDetach(window);
-            test = nullptr;
-        }
+            DestroyTest(window);
         else
-        {
             test->OnGUIRender(window, deltaTime);
-        }
     }
     else
     {
