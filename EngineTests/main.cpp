@@ -13,8 +13,7 @@ int main()
 
     Game::Engine* engine = new Game::Engine();
 
-    engine->PushLayer(std::make_shared<Game::TestMenu>());
-    // engine->PushLayer(new Game::TestColorChangingSquare());
+    engine->PushLayer(new Game::TestMenu());
     // engine->secondaryWindow->PushLayer(new Game::TestSingleImage());
     // engine->secondaryWindow->PushLayer(new Game::TestColorChangingSquare());
 

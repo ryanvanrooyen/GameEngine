@@ -14,10 +14,10 @@ namespace Game
     public:
         Engine();
 
-        void PushLayer(const std::shared_ptr<Layer>& layer);
-        void PushOverlay(const std::shared_ptr<Layer>& overlay);
-        void PopLayer(const std::shared_ptr<Layer>& layer);
-        void PopOverlay(const std::shared_ptr<Layer>& overlay);
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* overlay);
+        void PopLayer(Layer* layer);
+        void PopOverlay(Layer* overlay);
 
         int Run();
         bool IsRunning() { return isRunning; }

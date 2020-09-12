@@ -77,28 +77,28 @@ bool Engine::OnKeyPress(Window& window, KeyCode key, int scancode, int action, i
 }
 
 
-void Engine::PushLayer(const std::shared_ptr<Layer>& layer)
+void Engine::PushLayer(Layer* layer)
 {
     if (mainWindow)
         mainWindow->PushLayer(layer);
 }
 
 
-void Engine::PopLayer(const std::shared_ptr<Layer>& layer)
+void Engine::PopLayer(Layer* layer)
 {
     if (mainWindow)
         mainWindow->PopLayer(layer);
 }
 
 
-void Engine::PushOverlay(const std::shared_ptr<Layer>& overlay)
+void Engine::PushOverlay(Layer* overlay)
 {
     if (mainWindow)
         mainWindow->PushOverlay(overlay);
 }
 
 
-void Engine::PopOverlay(const std::shared_ptr<Layer>& overlay)
+void Engine::PopOverlay(Layer* overlay)
 {
     if (mainWindow)
         mainWindow->PopOverlay(overlay);

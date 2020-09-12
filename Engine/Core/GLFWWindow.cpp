@@ -82,7 +82,7 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
 
     GLFWWindow* newWindow = new GLFWWindow(windowHandle, name, width, height);
 
-    newWindow->SetUILayer(std::make_shared<ImGuiLayer>());
+    newWindow->SetUILayer(new ImGuiLayer());
 
     glfwSetWindowUserPointer(windowHandle, newWindow);
     glfwSetWindowCloseCallback(windowHandle, Event_WindowClose);

@@ -25,11 +25,11 @@ namespace Game
         virtual void Clear() = 0;
         virtual void SwapBuffers() = 0;
 
-        void PushLayer(const std::shared_ptr<Layer>& layer);
-        void PushOverlay(const std::shared_ptr<Layer>& overlay);
-        void PopLayer(const std::shared_ptr<Layer>& layer);
-        void PopOverlay(const std::shared_ptr<Layer>& overlay);
-        void SetUILayer(const std::shared_ptr<UILayer>& uiLayer);
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* overlay);
+        void PopLayer(Layer* layer);
+        void PopOverlay(Layer* overlay);
+        void SetUILayer(UILayer* uiLayer);
 
         static Window* Create(const std::string& name, Window* parent = nullptr);
 
@@ -47,13 +47,9 @@ namespace Game
         void DestroyLayers();
 
     private:
-        std::shared_ptr<UILayer> uiLayer;
+        UILayer* uiLayer;
         unsigned int layerInsertIndex = 0;
-        std::vector<std::shared_ptr<Layer>> layers;
-        std::vector<std::shared_ptr<Layer>> layersToRemove;
-        std::vector<std::shared_ptr<Layer>> overlaysToRemove;
-        bool hasLayersToRemove = false;
-        void RemovePendingLayers();
+        std::vector<Layer*> layers;
     };
 
 }
