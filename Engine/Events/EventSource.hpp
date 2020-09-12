@@ -37,14 +37,16 @@ namespace Game
         bool DispatchWindowClose(Window& window);
         bool DispatchWindowResize(Window& window, int width, int height);
         bool DispatchWindowScroll(Window& window, double xOffset, double yOffset);
+        bool DispatchWindowMonitor(Window& window, int monitorEventType);
 
         bool DispatchMouseMove(Window& window, double xPos, double yPos);
-        bool DispatchMousePress(Window& window, MouseCode button);
-        bool DispatchMouseRelease(Window& window, MouseCode button);
+        bool DispatchMousePress(Window& window, MouseCode button, int action, int mods);
+        bool DispatchMouseRelease(Window& window, MouseCode button, int action, int mods);
 
-        bool DispatchKeyPress(Window& window, KeyCode key);
-        bool DispatchKeyRelease(Window& window, KeyCode key);
-        bool DispatchKeyRepeat(Window& window, KeyCode key);
+        bool DispatchKeyPress(Window& window, KeyCode key, int scancode, int action, int mods);
+        bool DispatchKeyRelease(Window& window, KeyCode key, int scancode, int action, int mods);
+        bool DispatchKeyRepeat(Window& window, KeyCode key, int scancode, int action, int mods);
+        bool DispatchCharTyped(Window& window, unsigned int character);
 
     private:
         std::vector<WindowListener*> windowListeners;

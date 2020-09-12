@@ -16,9 +16,8 @@ class TestSingleImage : public Test
 {
 public:
     TestSingleImage();
-    const char* LayerName() const override { return "Single Texture"; }
     void OnUpdate(Window& window, float deltaTime) override;
-    void OnTestGUI(Window& window, float deltaTime) override;
+    void OnGUIRender(Window& window, float deltaTime) override;
 
 private:
     Shader shader;

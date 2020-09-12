@@ -16,9 +16,8 @@ class TestMultiImages : public Test
 {
 public:
     TestMultiImages();
-    const char* LayerName() const override { return "Duplicate Textures"; }
     void OnUpdate(Window& window, float deltaTime) override;
-    void OnTestGUI(Window& window, float deltaTime) override;
+    void OnGUIRender(Window& window, float deltaTime) override;
 
 private:
     Shader shader;

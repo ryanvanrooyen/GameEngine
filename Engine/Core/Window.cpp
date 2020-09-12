@@ -32,7 +32,6 @@ void Window::Update(float deltaTime)
         hasLayersToRemove = false;
     }
 
-    PollInput();
     Clear();
 
     for (const std::shared_ptr<Layer>& layer : layers)
@@ -41,13 +40,13 @@ void Window::Update(float deltaTime)
             layer->OnUpdate(*this, deltaTime);
     }
 
-    BeginGUI();
+    uiLayer->BeginGUI(*this);
     for (const std::shared_ptr<Layer>& layer : layers)
     {
         if (layer->Enabled())
             layer->OnGUIRender(*this, deltaTime);
     }
-    EndGUI();
+    uiLayer->EndGUI(*this);
 
     SwapBuffers();
 }
@@ -81,6 +80,13 @@ void Window::PushOverlay(const std::shared_ptr<Layer>& overlay)
         overlay->OnAttach(*this);
         PushListener(overlay.get());
     }
+}
+
+
+void Window::SetUILayer(const std::shared_ptr<UILayer>& uiLayer)
+{
+    this->uiLayer = uiLayer;
+    PushOverlay(uiLayer);
 }
 
 
@@ -172,7 +178,7 @@ void Window::RemovePendingLayers()
 }
 
 
-Window::~Window()
+void Window::DestroyLayers()
 {
     for (std::shared_ptr<Layer>& layer : layers)
     {
@@ -180,7 +186,13 @@ Window::~Window()
         layer->OnDetach(*this);
     }
 
-    TRACE("Deleting window: {}", name);
+    layers.clear();
+}
+
+
+Window::~Window()
+{
+    DestroyLayers();
 }
 
 }

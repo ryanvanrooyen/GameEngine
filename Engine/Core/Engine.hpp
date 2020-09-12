@@ -25,11 +25,15 @@ namespace Game
 
         // Events:
         bool OnWindowClose(Window& window) override;
-        bool OnKeyPress(Window& window, KeyCode key) override;
+        bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override;
 
         virtual ~Engine();
 
+        Window* ActiveWindow() { return mainWindow; }
+        static Engine* Instance() { return instance; }
+
     private:
+        static Engine* instance;
         Window* mainWindow;
         bool isRunning = false;
     };

@@ -50,6 +50,26 @@ TestSingleImage::TestSingleImage()
 
 void TestSingleImage::OnUpdate(Window& window, float deltaTime)
 {
+    if (window.IsKeyPressed(KeyCode::Left))
+        translation.x -= 1.f;
+    else if (window.IsKeyPressed(KeyCode::Right))
+        translation.x += 1.f;
+
+    if (translation.x < 0)
+        translation.x = 0.f;
+    else if (translation.x > window.Width() - width)
+        translation.x = window.Width() - width;
+
+    if (window.IsKeyPressed(KeyCode::Up))
+        translation.y += 1.f;
+    else if (window.IsKeyPressed(KeyCode::Down))
+        translation.y -= 1.f;
+
+    if (translation.y < 0)
+        translation.y = 0.f;
+    else if (translation.y > window.Height() - height)
+        translation.y = window.Height() - height;
+
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
 
@@ -60,7 +80,7 @@ void TestSingleImage::OnUpdate(Window& window, float deltaTime)
 }
 
 
-void TestSingleImage::OnTestGUI(Window& window, float deltaTime)
+void TestSingleImage::OnGUIRender(Window& window, float deltaTime)
 {
     ImGui::NewLine();
     ImGui::PushItemWidth(-1);

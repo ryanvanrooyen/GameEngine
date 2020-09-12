@@ -3,12 +3,14 @@
 
 #include "EngineCommon.h"
 #include "Events/EventSource.hpp"
+#include "Input/InputSource.hpp"
 
 namespace Game
 {
     class Layer;
+    class UILayer;
 
-    class Window : public EventSource
+    class Window : public EventSource, public InputSource
     {
     public:
         Window(const std::string& name, int width, int height);
@@ -16,19 +18,18 @@ namespace Game
 
         std::string Name() { return name; }
 
+        virtual void PollInput() = 0;
+
         void Update(float deltaTime);
         virtual void MakeCurrent() = 0;
-        virtual void PollInput() = 0;
         virtual void Clear() = 0;
         virtual void SwapBuffers() = 0;
-
-        virtual void BeginGUI() = 0;
-        virtual void EndGUI() = 0;
 
         void PushLayer(const std::shared_ptr<Layer>& layer);
         void PushOverlay(const std::shared_ptr<Layer>& overlay);
         void PopLayer(const std::shared_ptr<Layer>& layer);
         void PopOverlay(const std::shared_ptr<Layer>& overlay);
+        void SetUILayer(const std::shared_ptr<UILayer>& uiLayer);
 
         static Window* Create(const std::string& name, Window* parent = nullptr);
 
@@ -43,8 +44,10 @@ namespace Game
         std::string name;
         bool vsync = false;
         int width, height;
+        void DestroyLayers();
 
     private:
+        std::shared_ptr<UILayer> uiLayer;
         unsigned int layerInsertIndex = 0;
         std::vector<std::shared_ptr<Layer>> layers;
         std::vector<std::shared_ptr<Layer>> layersToRemove;

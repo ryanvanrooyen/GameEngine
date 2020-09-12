@@ -27,15 +27,22 @@ namespace Game
         bool OnWindowScroll(Window& window, double xOffset, double yOffset) override { return enabled && DispatchWindowScroll(window, xOffset, yOffset); }
 
         bool OnMouseMove(Window& window, double xPos, double yPos) override { return enabled && DispatchMouseMove(window, xPos, yPos); }
-        bool OnMousePress(Window& window, MouseCode button) override { return enabled && DispatchMousePress(window, button); }
-        bool OnMouseRelease(Window& window, MouseCode button) override { return enabled && DispatchMouseRelease(window, button); }
+        bool OnMousePress(Window& window, MouseCode button, int action, int mods) override { return enabled && DispatchMousePress(window, button, action, mods); }
+        bool OnMouseRelease(Window& window, MouseCode button, int action, int mods) override { return enabled && DispatchMouseRelease(window, button, action, mods); }
 
-        bool OnKeyPress(Window& window, KeyCode key) override { return enabled && DispatchKeyPress(window, key); }
-        bool OnKeyRelease(Window& window, KeyCode key) override { return enabled && DispatchKeyRelease(window, key); }
-        bool OnKeyRepeat(Window& window, KeyCode key) override { return enabled && DispatchKeyRepeat(window, key); }
+        bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override { return enabled && DispatchKeyPress(window, key, scancode, action, mods); }
+        bool OnKeyRelease(Window& window, KeyCode key, int scancode, int action, int mods) override { return enabled && DispatchKeyRelease(window, key, scancode, action, mods); }
+        bool OnKeyRepeat(Window& window, KeyCode key, int scancode, int action, int mods) override { return enabled && DispatchKeyRepeat(window, key, scancode, action, mods); }
 
     private:
         bool enabled = true;
     };
 
+
+    class UILayer : public Layer
+    {
+    public:
+        virtual void BeginGUI(Window& window) {}
+        virtual void EndGUI(Window& window) {}
+    };
 }

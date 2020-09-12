@@ -1,26 +1,15 @@
 
 #pragma once
 
+#include "EngineCommon.h"
 #include "Core/Layer.hpp"
 
 namespace Game
 {
-    class Window;
-    class TestMenu;
-
     class Test : public Layer
     {
     public:
-        void OnGUIRender(Window& window, float deltaTime) override;
-        virtual void OnTestGUI(Window& window, float deltaTime) {}
+        virtual const char* LayerName() const override { return "Test"; }
         virtual ~Test() { TRACE("Deleting Test"); }
-
-    protected:
-        void BackToMenu(Window& window);
-
-    private:
-        friend class TestMenu;
-        TestMenu* menu;
     };
-
 }

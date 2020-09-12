@@ -10,6 +10,19 @@
 namespace Game
 {
 
+void Renderer::Clear()
+{
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
+}
+
+
+void Renderer::EnableAlphaBlending()
+{
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+}
+
+
 void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader)
 {
     shader.Bind();

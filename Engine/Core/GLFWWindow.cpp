@@ -1,10 +1,10 @@
 
 #include "EngineCommon.h"
 #include "GLFWWindow.hpp"
+#include "ImGuiLayer.hpp"
 #include "Rendering/opengl.hpp"
+#include "Rendering/Renderer.hpp"
 #include <GLFW/glfw3.h>
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_opengl3.h"
 
 
 namespace Game
@@ -22,28 +22,6 @@ GLFWWindow::GLFWWindow(GLFWWindow::Handle* windowHandle, const std::string& name
 }
 
 
-static void InitIMGui(GLFWWindow::Handle* window)
-{
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.ScaleAllSizes(1.3f);
-    io.Fonts->AddFontDefault();
-    io.FontGlobalScale = 1.3f;
-    io.Fonts->Build();
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    // ImGui::StyleColorsClassic();
-    // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    const char* glsl_version = "#version 150";
-    ImGui_ImplOpenGL3_Init(glsl_version);
-}
-
-
 unsigned int GLFWWindow::windowCount = 0;
 
 
@@ -53,7 +31,6 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     if (windowCount == 0)
     {
         TRACE("Initializing GLFW");
-
         glfwSetErrorCallback(error_callback);
 
         if (!glfwInit())
@@ -87,16 +64,7 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     TRACE("Making new GLFW Context Current");
     glfwMakeContextCurrent(windowHandle);
 
-    // gl3wInit();
-
     TRACE("Creating GLFW Context");
-
-    ImGuiContext* imguiContext = nullptr;
-    ImFontAtlas* atlas = new ImFontAtlas();
-    imguiContext = ImGui::CreateContext(atlas);
-
-    ASSERT(imguiContext, "Failed to create ImGui Context");
-    // ImGui::SetCurrentContext(imguiContext);
 
     if (windowCount == 0)
     {
@@ -109,44 +77,26 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
         INFO("OpenGL Version {}", glGetString(GL_VERSION));
     }
 
-    // Enable alpha blending:
-    GLCall(glEnable(GL_BLEND));
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-    TRACE("Initializing ImGui Context");
-    InitIMGui(windowHandle);
-
-
-    // Example on how to init 2 windows:
-
-    // GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui OpenGL3 example", NULL, NULL);
-    // glfwMakeContextCurrent(window);
-    // gl3wInit();
-    // ImGuiContext* ctx1 = ImGui::GetCurrentContext();
-
-    // // Setup ImGui binding
-    // ImGui_ImplGlfwGL3_Init(window, true);
-
-    // GLFWwindow* window2 = glfwCreateWindow(1280, 720, "ImGui OpenGL3 example", NULL, NULL);
-    // glfwMakeContextCurrent(window2);
-    // gl3wInit();
-
-    // ImGuiContext* ctx2 = ImGui::CreateContext();
-    // ImGui::SetCurrentContext(ctx2);
-
-    // // Setup ImGui binding
-    // ImGui_ImplGlfwGL3_Init(window2, true);
+    Renderer::EnableAlphaBlending();
 
     GLFWWindow* newWindow = new GLFWWindow(windowHandle, name, width, height);
-    newWindow->imguiContext = imguiContext;
+
+    newWindow->SetUILayer(std::make_shared<ImGuiLayer>());
 
     glfwSetWindowUserPointer(windowHandle, newWindow);
     glfwSetWindowCloseCallback(windowHandle, Event_WindowClose);
+    glfwSetWindowRefreshCallback(windowHandle, Event_WindowRefresh);
     glfwSetWindowSizeCallback(windowHandle, Event_WindowResize);
     glfwSetScrollCallback(windowHandle, Event_WindowScroll);
     glfwSetMouseButtonCallback(windowHandle, Event_MousePress);
     glfwSetCursorPosCallback(windowHandle, Event_MouseMove);
     glfwSetKeyCallback(windowHandle, Event_KeyPress);
+    glfwSetCharCallback(windowHandle, Event_CharTyped);
+
+    // glfwSetMonitorCallback([newWindow] (GLFWmonitor* monitor, int monitorEventType) {
+    //     newWindow->DispatchWindowMonitor(*newWindow, monitorEventType);
+    // });
 
     newWindow->SetVSyncEnabled(true);
 
@@ -159,7 +109,6 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
 void GLFWWindow::MakeCurrent()
 {
     glfwMakeContextCurrent(windowHandle);
-    // ImGui::SetCurrentContext(imguiContext);
 }
 
 
@@ -175,24 +124,9 @@ void GLFWWindow::PollInput()
 }
 
 
-void GLFWWindow::BeginGUI()
-{
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-}
-
-
-void GLFWWindow::EndGUI()
-{
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-
 void GLFWWindow::Clear()
 {
-    GLCall(glClear(GL_COLOR_BUFFER_BIT));
+    Renderer::Clear();
 }
 
 
@@ -218,13 +152,25 @@ void GLFWWindow::Event_WindowClose(Handle* handle)
 }
 
 
+void GLFWWindow::Event_WindowRefresh(Handle* handle)
+{
+    GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
+    if (window) {
+        float deltaTime = 0.f;  // TODO: Get current delta time
+        window->Update(deltaTime);
+    }
+}
+
+
 void GLFWWindow::Event_WindowResize(Handle* handle, int width, int height)
 {
     GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
     if (window) {
-        window->DispatchWindowResize(*window, width, height);
+        int previousWidth = window->width;
+        int previousHeight = window->height;
         window->width = width;
         window->height = height;
+        window->DispatchWindowResize(*window, previousWidth, previousHeight);
     }
 }
 
@@ -246,9 +192,9 @@ void GLFWWindow::Event_MousePress(Handle* handle, int button, int action, int mo
     }
 
     if (action == GLFW_PRESS)
-        window->DispatchMousePress(*window, (MouseCode)button);
+        window->DispatchMousePress(*window, (MouseCode)button, action, mods);
     else if (action == GLFW_RELEASE)
-        window->DispatchMouseRelease(*window, (MouseCode)button);
+        window->DispatchMouseRelease(*window, (MouseCode)button, action, mods);
 }
 
 
@@ -269,28 +215,69 @@ void GLFWWindow::Event_KeyPress(Handle* handle, int key, int scancode, int actio
     }
 
     if (action == GLFW_PRESS)
-        window->DispatchKeyPress(*window, (KeyCode)key);
+        window->DispatchKeyPress(*window, (KeyCode)key, scancode, action, mods);
     else if (action == GLFW_RELEASE)
-        window->DispatchKeyRelease(*window, (KeyCode)key);
+        window->DispatchKeyRelease(*window, (KeyCode)key, scancode, action, mods);
     else if (action == GLFW_REPEAT)
-        window->DispatchKeyRepeat(*window, (KeyCode)key);
+        window->DispatchKeyRepeat(*window, (KeyCode)key, scancode, action, mods);
+}
+
+
+void GLFWWindow::Event_CharTyped(Handle* handle, unsigned int character)
+{
+    GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
+    if (window) {
+        window->DispatchCharTyped(*window, character);
+    }
+}
+
+
+bool GLFWWindow::IsKeyPressed(KeyCode key)
+{
+    return glfwGetKey(windowHandle, key) == GLFW_PRESS;
+}
+
+
+bool GLFWWindow::IsMousePressed(MouseCode button)
+{
+    return glfwGetMouseButton(windowHandle, button) == GLFW_PRESS;
+}
+
+
+std::pair<double, double> GLFWWindow::GetMousePosition()
+{
+    double xPos, yPos;
+    glfwGetCursorPos(windowHandle, &xPos, &yPos);
+    return { xPos, yPos };
+}
+
+
+double GLFWWindow::GetMouseX()
+{
+    double xPos, yPos;
+    glfwGetCursorPos(windowHandle, &xPos, &yPos);
+    return xPos;
+}
+
+
+double GLFWWindow::GetMouseY()
+{
+    double xPos, yPos;
+    glfwGetCursorPos(windowHandle, &xPos, &yPos);
+    return yPos;
 }
 
 
 GLFWWindow::~GLFWWindow()
 {
-    glfwDestroyWindow(windowHandle);
     TRACE("Destroying GLFW window {}", name);
+    DestroyLayers();
+
+    glfwDestroyWindow(windowHandle);
     windowCount--;
 
     if (windowCount == 0)
     {
-        TRACE("Shutting down GLFW");
-
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
-
         TRACE("Terminating GLFW");
         glfwTerminate();
     }

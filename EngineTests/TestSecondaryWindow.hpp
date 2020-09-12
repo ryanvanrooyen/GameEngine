@@ -18,12 +18,11 @@ class TestSecondaryWindow : public Test
 {
 public:
     TestSecondaryWindow();
-    const char* LayerName() const override { return "Secondary Window"; }
     void OnUpdate(Window& window, float deltaTime) override;
-    void OnTestGUI(Window& window, float deltaTime) override;
+    void OnGUIRender(Window& window, float deltaTime) override;
     ~TestSecondaryWindow();
 
-    bool OnKeyPress(Window& window, KeyCode key) override;
+    bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override;
 
 private:
     Shader shader;

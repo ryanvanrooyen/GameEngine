@@ -66,7 +66,7 @@ void TestMultiImages::OnUpdate(Window& window, float deltaTime)
 }
 
 
-void TestMultiImages::OnTestGUI(Window& window, float deltaTime)
+void TestMultiImages::OnGUIRender(Window& window, float deltaTime)
 {
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position 1:");

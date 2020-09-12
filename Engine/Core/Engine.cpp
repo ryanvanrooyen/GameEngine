@@ -6,8 +6,13 @@
 namespace Game
 {
 
+
+Engine* Engine::instance;
+
+
 Engine::Engine()
 {
+    instance = this;
     mainWindow = Window::Create("Main");
     if (mainWindow) {
         mainWindow->PushListener(this);
@@ -25,6 +30,7 @@ int Engine::Run()
         isRunning = true;
         while (isRunning)
         {
+            mainWindow->PollInput();
             mainWindow->Update(0.f);
 
             // secondaryWindow->MakeCurrent();
@@ -61,7 +67,7 @@ bool Engine::OnWindowClose(Window& window)
 }
 
 
-bool Engine::OnKeyPress(Window& window, KeyCode key)
+bool Engine::OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods)
 {
     if (key == KeyCode::Escape) {
         Quit();

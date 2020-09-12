@@ -48,9 +48,10 @@ TestSecondaryWindow::TestSecondaryWindow()
 }
 
 
-bool TestSecondaryWindow::OnKeyPress(Window& window, KeyCode key)
+bool TestSecondaryWindow::OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods)
 {
-    if (key == KeyCode::Space)  {
+    if (key == KeyCode::Space)
+    {
         TRACE("Spacebar pressed!");
         if (secondaryWindow)
         {
@@ -85,7 +86,7 @@ void TestSecondaryWindow::OnUpdate(Window& window, float deltaTime)
 }
 
 
-void TestSecondaryWindow::OnTestGUI(Window& window, float deltaTime)
+void TestSecondaryWindow::OnGUIRender(Window& window, float deltaTime)
 {
     ImGui::PushItemWidth(-1);
     ImGui::TextUnformatted("Position:");

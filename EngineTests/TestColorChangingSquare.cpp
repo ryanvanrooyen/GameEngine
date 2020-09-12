@@ -1,6 +1,8 @@
 
+#include "EngineCommon.h"
 #include "TestColorChangingSquare.hpp"
 #include "Core/Window.hpp"
+#include "Input/Input.hpp"
 #include "Rendering/Renderer.hpp"
 #include "imgui.h"
 
@@ -13,7 +15,7 @@ static float height = 100.f;
 
 TestColorChangingSquare::TestColorChangingSquare()
     : shader("shaders/vertexShader.glsl", "shaders/fragmentColorShader.glsl")
-    , proj(glm::ortho(0.f, 960.f, 0.f, 540.f, -1.f, 1.f))
+    , proj(glm::ortho(0.f, 960.f, 540.f, 0.f, -1.f, 1.f))
     , view(glm::translate(glm::mat4(1.f), glm::vec3(0, 0, 0)))
     , translation(200, 200, 0)
 {
@@ -44,8 +46,48 @@ TestColorChangingSquare::TestColorChangingSquare()
 }
 
 
+bool TestColorChangingSquare::OnWindowResize(Window& window, int width, int height)
+{
+    proj = glm::ortho(0.f, (float)window.Width(), (float)window.Height(), 0.f, -1.f, 1.f);
+    return false;
+}
+
+
+void TestColorChangingSquare::OnAttach(Window& window)
+{
+    proj = glm::ortho(0.f, (float)window.Width(), (float)window.Height(), 0.f, -1.f, 1.f);
+}
+
+
 void TestColorChangingSquare::OnUpdate(Window& window, float deltaTime)
 {
+    if (Input::IsKeyPressed(KeyCode::Left))
+        translation.x -= 1.f;
+    else if (window.IsKeyPressed(KeyCode::Right))
+        translation.x += 1.f;
+
+    if (window.IsKeyPressed(KeyCode::Up))
+        translation.y -= 1.f;
+    else if (window.IsKeyPressed(KeyCode::Down))
+        translation.y += 1.f;
+
+    if (window.IsMousePressed(MouseCode::ButtonLeft))
+    {
+        auto [x, y] = window.GetMousePosition();
+        translation.x = x - width/2.f;
+        translation.y = y - height/2.f;
+    }
+
+    if (translation.x < 0)
+        translation.x = 0.f;
+    else if (translation.x > window.Width() - width)
+        translation.x = window.Width() - width;
+
+    if (translation.y < 0)
+        translation.y = 0.f;
+    else if (translation.y > window.Height() - height)
+        translation.y = window.Height() - height;
+
     glm::mat4 model = glm::translate(glm::mat4(1.f), translation);
     glm::mat4 mvp = proj * view * model;
 
@@ -61,7 +103,7 @@ void TestColorChangingSquare::OnUpdate(Window& window, float deltaTime)
 }
 
 
-void TestColorChangingSquare::OnTestGUI(Window& window, float deltaTime)
+void TestColorChangingSquare::OnGUIRender(Window& window, float deltaTime)
 {
     // ImGui::Begin(("##Window_" + window.Name()).c_str());
     ImGui::PushItemWidth(-1);

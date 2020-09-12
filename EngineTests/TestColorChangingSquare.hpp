@@ -17,9 +17,11 @@ class TestColorChangingSquare : public Test
 {
 public:
     TestColorChangingSquare();
-    const char* LayerName() const override { return "Color Changing Square"; }
+    void OnAttach(Window& window) override;
     void OnUpdate(Window& window, float deltaTime) override;
-    void OnTestGUI(Window& window, float deltaTime) override;
+    void OnGUIRender(Window& window, float deltaTime) override;
+
+    bool OnWindowResize(Window& window, int width, int height) override;
 
 private:
     Shader shader;
