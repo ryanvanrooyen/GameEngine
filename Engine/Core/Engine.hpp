@@ -26,7 +26,7 @@ namespace Game
 
         // Events:
         bool OnWindowClose(Window& window) override;
-        bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override;
+        bool OnKeyPress(Window& window, KeyCode key) override;
 
         virtual ~Engine();
 

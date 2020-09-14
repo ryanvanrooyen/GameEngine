@@ -14,7 +14,7 @@ namespace Game
         const char* LayerName() const override { return "TestMenu"; }
         void OnUpdate(Window& window, float deltaTime) override;
         void OnGUIRender(Window& window, float deltaTime) override;
-        bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override;
+        bool OnKeyPress(Window& window, KeyCode key) override;
 
     private:
         Test* test = nullptr;

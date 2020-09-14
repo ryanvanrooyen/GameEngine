@@ -80,7 +80,7 @@ bool Engine::OnWindowClose(Window& window)
 }
 
 
-bool Engine::OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods)
+bool Engine::OnKeyPress(Window& window, KeyCode key)
 {
     if (key == KeyCode::Escape) {
         Quit();

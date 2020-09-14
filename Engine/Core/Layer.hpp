@@ -23,16 +23,16 @@ namespace Game
 
         // Propagate events:
         bool OnWindowClose(Window& window) override { return enabled && DispatchWindowClose(window); }
-        bool OnWindowResize(Window& window, int width, int height) override { return enabled && DispatchWindowResize(window, width, height); }
+        bool OnWindowResize(Window& window) override { return enabled && DispatchWindowResize(window); }
         bool OnWindowScroll(Window& window, double xOffset, double yOffset) override { return enabled && DispatchWindowScroll(window, xOffset, yOffset); }
 
         bool OnMouseMove(Window& window, double xPos, double yPos) override { return enabled && DispatchMouseMove(window, xPos, yPos); }
-        bool OnMousePress(Window& window, MouseCode button, int action, int mods) override { return enabled && DispatchMousePress(window, button, action, mods); }
-        bool OnMouseRelease(Window& window, MouseCode button, int action, int mods) override { return enabled && DispatchMouseRelease(window, button, action, mods); }
+        bool OnMousePress(Window& window, MouseCode button) override { return enabled && DispatchMousePress(window, button); }
+        bool OnMouseRelease(Window& window, MouseCode button) override { return enabled && DispatchMouseRelease(window, button); }
 
-        bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override { return enabled && DispatchKeyPress(window, key, scancode, action, mods); }
-        bool OnKeyRelease(Window& window, KeyCode key, int scancode, int action, int mods) override { return enabled && DispatchKeyRelease(window, key, scancode, action, mods); }
-        bool OnKeyRepeat(Window& window, KeyCode key, int scancode, int action, int mods) override { return enabled && DispatchKeyRepeat(window, key, scancode, action, mods); }
+        bool OnKeyPress(Window& window, KeyCode key) override { return enabled && DispatchKeyPress(window, key); }
+        bool OnKeyRelease(Window& window, KeyCode key) override { return enabled && DispatchKeyRelease(window, key); }
+        bool OnKeyRepeat(Window& window, KeyCode key) override { return enabled && DispatchKeyRepeat(window, key); }
 
     private:
         bool enabled = true;

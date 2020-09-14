@@ -48,7 +48,7 @@ TestSecondaryWindow::TestSecondaryWindow()
 }
 
 
-bool TestSecondaryWindow::OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods)
+bool TestSecondaryWindow::OnKeyPress(Window& window, KeyCode key)
 {
     if (key == KeyCode::Space)
     {

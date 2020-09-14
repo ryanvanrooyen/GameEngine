@@ -123,7 +123,7 @@ void ImGuiLayer::EndGUI(Window& window, float deltaTime)
 }
 
 
-bool ImGuiLayer::OnWindowResize(Window& window, int width, int height)
+bool ImGuiLayer::OnWindowResize(Window& window)
 {
     SetDisplaySize(window);
     return false;
@@ -154,7 +154,7 @@ bool ImGuiLayer::OnMouseMove(Window& window, double xPos, double yPos)
 }
 
 
-bool ImGuiLayer::OnMousePress(Window& window, MouseCode button, int action, int mods)
+bool ImGuiLayer::OnMousePress(Window& window, MouseCode button)
 {
     ImGuiIO& io = ImGui::GetIO();
     if (button >= 0)
@@ -163,7 +163,7 @@ bool ImGuiLayer::OnMousePress(Window& window, MouseCode button, int action, int 
 }
 
 
-bool ImGuiLayer::OnMouseRelease(Window& window, MouseCode button, int action, int mods)
+bool ImGuiLayer::OnMouseRelease(Window& window, MouseCode button)
 {
     ImGuiIO& io = ImGui::GetIO();
     if (button >= 0)
@@ -172,7 +172,7 @@ bool ImGuiLayer::OnMouseRelease(Window& window, MouseCode button, int action, in
 }
 
 
-bool ImGuiLayer::OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods)
+bool ImGuiLayer::OnKeyPress(Window& window, KeyCode key)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.KeysDown[key] = true;
@@ -186,7 +186,7 @@ bool ImGuiLayer::OnKeyPress(Window& window, KeyCode key, int scancode, int actio
 }
 
 
-bool ImGuiLayer::OnKeyRelease(Window& window, KeyCode key, int scancode, int action, int mods)
+bool ImGuiLayer::OnKeyRelease(Window& window, KeyCode key)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.KeysDown[key] = false;
@@ -200,7 +200,7 @@ bool ImGuiLayer::OnKeyRelease(Window& window, KeyCode key, int scancode, int act
 }
 
 
-bool ImGuiLayer::OnKeyRepeat(Window& window, KeyCode key, int scancode, int action, int mods)
+bool ImGuiLayer::OnKeyRepeat(Window& window, KeyCode key)
 {
     return false;
 }

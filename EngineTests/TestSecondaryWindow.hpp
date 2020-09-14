@@ -22,7 +22,7 @@ public:
     void OnGUIRender(Window& window, float deltaTime) override;
     ~TestSecondaryWindow();
 
-    bool OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods) override;
+    bool OnKeyPress(Window& window, KeyCode key) override;
 
 private:
     Shader shader;

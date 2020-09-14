@@ -46,7 +46,7 @@ TestColorChangingSquare::TestColorChangingSquare()
 }
 
 
-bool TestColorChangingSquare::OnWindowResize(Window& window, int width, int height)
+bool TestColorChangingSquare::OnWindowResize(Window& window)
 {
     proj = glm::ortho(0.f, (float)window.Width(), (float)window.Height(), 0.f, -1.f, 1.f);
     return false;

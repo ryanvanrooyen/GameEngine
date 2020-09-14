@@ -43,7 +43,7 @@ bool TestMenu::DestroyTest(Window& window)
 }
 
 
-bool TestMenu::OnKeyPress(Window& window, KeyCode key, int scancode, int action, int mods)
+bool TestMenu::OnKeyPress(Window& window, KeyCode key)
 {
     // Allow ESC to be a back button if we have an active test:
     if (key == KeyCode::Escape)

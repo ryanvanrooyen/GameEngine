@@ -21,7 +21,7 @@ public:
     void OnUpdate(Window& window, float deltaTime) override;
     void OnGUIRender(Window& window, float deltaTime) override;
 
-    bool OnWindowResize(Window& window, int width, int height) override;
+    bool OnWindowResize(Window& window) override;
 
 private:
     Shader shader;

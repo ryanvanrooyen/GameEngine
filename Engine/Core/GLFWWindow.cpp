@@ -172,11 +172,9 @@ void GLFWWindow::Event_WindowResize(Handle* handle, int width, int height)
 {
     GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
     if (window) {
-        int previousWidth = window->width;
-        int previousHeight = window->height;
         window->width = width;
         window->height = height;
-        window->DispatchWindowResize(*window, previousWidth, previousHeight);
+        window->DispatchWindowResize(*window);
     }
 }
 
@@ -198,9 +196,9 @@ void GLFWWindow::Event_MousePress(Handle* handle, int button, int action, int mo
     }
 
     if (action == GLFW_PRESS)
-        window->DispatchMousePress(*window, (MouseCode)button, action, mods);
+        window->DispatchMousePress(*window, (MouseCode)button);
     else if (action == GLFW_RELEASE)
-        window->DispatchMouseRelease(*window, (MouseCode)button, action, mods);
+        window->DispatchMouseRelease(*window, (MouseCode)button);
 }
 
 
@@ -221,11 +219,11 @@ void GLFWWindow::Event_KeyPress(Handle* handle, int key, int scancode, int actio
     }
 
     if (action == GLFW_PRESS)
-        window->DispatchKeyPress(*window, (KeyCode)key, scancode, action, mods);
+        window->DispatchKeyPress(*window, (KeyCode)key);
     else if (action == GLFW_RELEASE)
-        window->DispatchKeyRelease(*window, (KeyCode)key, scancode, action, mods);
+        window->DispatchKeyRelease(*window, (KeyCode)key);
     else if (action == GLFW_REPEAT)
-        window->DispatchKeyRepeat(*window, (KeyCode)key, scancode, action, mods);
+        window->DispatchKeyRepeat(*window, (KeyCode)key);
 }
 
 
