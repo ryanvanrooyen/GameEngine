@@ -33,13 +33,13 @@ void Window::Update(float deltaTime)
             layer->OnUpdate(*this, deltaTime);
     }
 
-    uiLayer->BeginGUI(*this);
+    uiLayer->BeginGUI(*this, deltaTime);
     for (Layer* layer : layers)
     {
         if (layer->Enabled())
             layer->OnGUIRender(*this, deltaTime);
     }
-    uiLayer->EndGUI(*this);
+    uiLayer->EndGUI(*this, deltaTime);
 
     SwapBuffers();
 }

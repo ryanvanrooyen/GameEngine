@@ -20,6 +20,7 @@ namespace Game
         void PopOverlay(Layer* overlay);
 
         int Run();
+        float DeltaTime() { return deltaTime; }
         bool IsRunning() { return isRunning; }
         void Quit();
 
@@ -36,6 +37,7 @@ namespace Game
         static Engine* instance;
         Window* mainWindow;
         bool isRunning = false;
+        float deltaTime = 0.f;
     };
 
 }

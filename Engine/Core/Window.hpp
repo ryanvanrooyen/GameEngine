@@ -39,6 +39,7 @@ namespace Game
 
         int Width() { return width; }
         int Height() { return height; }
+        virtual std::pair<int, int> GetFramebufferSize() = 0;
 
     protected:
         std::string name;

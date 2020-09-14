@@ -129,7 +129,6 @@ group "Vendor"
         targetdir "bin/obj/%{cfg.buildcfg}"
         files {
             "vendor/imgui/*.cpp",
-            "vendor/imgui/examples/imgui_impl_glfw.cpp",
             "vendor/imgui/examples/imgui_impl_opengl3.cpp",
         }
         includedirs {
@@ -137,7 +136,7 @@ group "Vendor"
             "vendor/glad",
             "vendor/imgui",
         }
-               
+
 
     project "Utils"
         kind "StaticLib"
@@ -150,7 +149,7 @@ group "Vendor"
         includedirs {
             "vendor/stb"
         }
-               
+
 
 group ""
 

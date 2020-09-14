@@ -31,6 +31,8 @@ namespace Game
         virtual double GetMouseX() override;
         virtual double GetMouseY() override;
 
+        virtual std::pair<int, int> GetFramebufferSize() override;
+
         Handle* GetHandle() { return windowHandle; }
 
     private:

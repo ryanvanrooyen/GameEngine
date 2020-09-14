@@ -1,7 +1,7 @@
 
 #include "EngineCommon.h"
+#include "Engine.hpp"
 #include "GLFWWindow.hpp"
-#include "ImGuiLayer.hpp"
 #include "Rendering/opengl.hpp"
 #include "Rendering/Renderer.hpp"
 #include <GLFW/glfw3.h>
@@ -82,8 +82,6 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
 
     GLFWWindow* newWindow = new GLFWWindow(windowHandle, name, width, height);
 
-    newWindow->SetUILayer(new ImGuiLayer());
-
     glfwSetWindowUserPointer(windowHandle, newWindow);
     glfwSetWindowCloseCallback(windowHandle, Event_WindowClose);
     glfwSetWindowRefreshCallback(windowHandle, Event_WindowRefresh);
@@ -97,6 +95,20 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     // glfwSetMonitorCallback([newWindow] (GLFWmonitor* monitor, int monitorEventType) {
     //     newWindow->DispatchWindowMonitor(*newWindow, monitorEventType);
     // });
+
+    // Example on how to init 2 windows:
+    // GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui OpenGL3 example", NULL, NULL);
+    // glfwMakeContextCurrent(window);
+    // gl3wInit();
+    // ImGuiContext* ctx1 = ImGui::GetCurrentContext();
+    // ImGui_ImplGlfwGL3_Init(window, true);
+
+    // GLFWwindow* window2 = glfwCreateWindow(1280, 720, "ImGui OpenGL3 example", NULL, NULL);
+    // glfwMakeContextCurrent(window2);
+    // gl3wInit();
+    // ImGuiContext* ctx2 = ImGui::CreateContext();
+    // ImGui::SetCurrentContext(ctx2);
+    // ImGui_ImplGlfwGL3_Init(window2, true);
 
     newWindow->SetVSyncEnabled(true);
 
@@ -114,11 +126,6 @@ void GLFWWindow::MakeCurrent()
 
 void GLFWWindow::PollInput()
 {
-    // Poll and handle events (inputs, window resize, etc.)
-    // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-    // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-    // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-    // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
     glfwPollEvents();
     // glfwWaitEvents();
 }
@@ -156,8 +163,7 @@ void GLFWWindow::Event_WindowRefresh(Handle* handle)
 {
     GLFWWindow* window = (GLFWWindow*)glfwGetWindowUserPointer(handle);
     if (window) {
-        float deltaTime = 0.f;  // TODO: Get current delta time
-        window->Update(deltaTime);
+        window->Update(Engine::Instance()->DeltaTime());
     }
 }
 
@@ -265,6 +271,14 @@ double GLFWWindow::GetMouseY()
     double xPos, yPos;
     glfwGetCursorPos(windowHandle, &xPos, &yPos);
     return yPos;
+}
+
+
+std::pair<int, int> GLFWWindow::GetFramebufferSize()
+{
+    int width, height;
+    glfwGetFramebufferSize(windowHandle, &width, &height);
+    return { width, height };
 }
 
 

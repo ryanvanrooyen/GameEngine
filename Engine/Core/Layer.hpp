@@ -42,7 +42,7 @@ namespace Game
     class UILayer : public Layer
     {
     public:
-        virtual void BeginGUI(Window& window) {}
-        virtual void EndGUI(Window& window) {}
+        virtual void BeginGUI(Window& window, float deltaTime) {}
+        virtual void EndGUI(Window& window, float deltaTime) {}
     };
 }

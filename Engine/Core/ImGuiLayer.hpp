@@ -5,7 +5,6 @@
 #include "Layer.hpp"
 
 struct ImGuiContext;
-struct GLFWwindow;
 
 namespace Game
 {
@@ -20,8 +19,8 @@ namespace Game
         virtual void OnAttach(Window& window) override;
         virtual void OnDetach(Window& window) override;
 
-        virtual void BeginGUI(Window& window) override;
-        virtual void EndGUI(Window& window) override;
+        virtual void BeginGUI(Window& window, float deltaTime) override;
+        virtual void EndGUI(Window& window, float deltaTime) override;
 
         virtual bool OnWindowResize(Window& window, int width, int height) override;
         virtual bool OnWindowScroll(Window& window, double xOffset, double yOffset) override;
@@ -36,6 +35,5 @@ namespace Game
 
     private:
         ImGuiContext* context = nullptr;
-        GLFWwindow* windowHandle = nullptr;
     };
 }

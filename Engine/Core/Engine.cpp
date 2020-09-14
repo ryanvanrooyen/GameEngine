@@ -2,6 +2,12 @@
 #include "EngineCommon.h"
 #include "Engine.hpp"
 #include "Window.hpp"
+#include "ImGuiLayer.hpp"
+
+using std::chrono::duration;
+using std::chrono::duration_cast;
+using std::chrono::high_resolution_clock;
+
 
 namespace Game
 {
@@ -16,6 +22,7 @@ Engine::Engine()
     mainWindow = Window::Create("Main");
     if (mainWindow) {
         mainWindow->PushListener(this);
+        mainWindow->SetUILayer(new ImGuiLayer());
     }
 }
 
@@ -27,11 +34,17 @@ int Engine::Run()
         if (!mainWindow)
             return 1;
 
+        high_resolution_clock::time_point previousFrameTime = high_resolution_clock::now();
         isRunning = true;
+
         while (isRunning)
         {
+            high_resolution_clock::time_point currentTime = high_resolution_clock::now();
+            deltaTime = (float)duration_cast<duration<double>>(currentTime - previousFrameTime).count();
+            previousFrameTime = currentTime;
+
             mainWindow->PollInput();
-            mainWindow->Update(0.f);
+            mainWindow->Update(deltaTime);
 
             // secondaryWindow->MakeCurrent();
             // secondaryWindow->PollInput();
