@@ -19,7 +19,7 @@ Engine* Engine::instance;
 Engine::Engine()
 {
     instance = this;
-    mainWindow = Window::Create("Main");
+    mainWindow = Window::Create({"Main", 1920, 1080});
     if (mainWindow) {
         mainWindow->PushListener(this);
         mainWindow->SetUILayer(new ImGuiLayer());

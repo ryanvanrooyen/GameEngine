@@ -10,7 +10,7 @@
     #ifdef DEBUG
         #define LOGLEVEL 4
     #else
-        #define LOGLEVEL 0
+        #define LOGLEVEL 2
     #endif
 #endif
 

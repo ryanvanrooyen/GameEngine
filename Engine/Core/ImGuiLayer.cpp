@@ -2,11 +2,107 @@
 #include "EngineCommon.h"
 #include "ImGuiLayer.hpp"
 #include "Window.hpp"
+#include "Input/Cursors.hpp"
 #include "examples/imgui_impl_opengl3.h"
+#include <GLFW/glfw3.h>
 
 
 namespace Game
 {
+
+
+static std::unordered_map<int, Cursor> CursorMappings = {
+    {ImGuiMouseCursor_Arrow, Cursor::Arrow },
+    {ImGuiMouseCursor_TextInput, Cursor::IBeam },
+    {ImGuiMouseCursor_Hand, Cursor::Hand },
+    {ImGuiMouseCursor_ResizeNS, Cursor::ResizeNS },
+    {ImGuiMouseCursor_ResizeEW, Cursor::ResizeEW },
+    {ImGuiMouseCursor_ResizeNESW, Cursor::ResizeNESW },
+    {ImGuiMouseCursor_ResizeNWSE, Cursor::ResizeNWSE },
+    {ImGuiMouseCursor_ResizeAll, Cursor::ResizeAll },
+    {ImGuiMouseCursor_NotAllowed, Cursor::NotAllowed },
+    {ImGuiMouseCursor_None, Cursor::None }};
+
+
+// Helper stuct we store in the void* RenderUserData field of each ImGuiViewport to retrieve our backend data.
+struct ImGuiViewportDataGlfw
+{
+    Window* Window = nullptr;
+    bool    WindowOwned = false;
+    int     IgnoreWindowPosEventFrame = -1;
+    int     IgnoreWindowSizeEventFrame = -1;
+    ~ImGuiViewportDataGlfw() { ASSERT(Window == nullptr, "ImGui Viewport Window not cleaned up!"); }
+};
+
+
+static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
+{
+    ImGuiViewportDataGlfw* data = IM_NEW(ImGuiViewportDataGlfw)();
+    viewport->PlatformUserData = data;
+
+    WindowSpec newWindowSpec = {};
+
+    // GLFW 3.2 unfortunately always set focus on glfwCreateWindow() if GLFW_VISIBLE is set, regardless of GLFW_FOCUSED
+    // With GLFW 3.3, the hint GLFW_FOCUS_ON_SHOW fixes this problem
+    glfwWindowHint(GLFW_VISIBLE, false);
+    glfwWindowHint(GLFW_FOCUSED, false);
+#if GLFW_HAS_FOCUS_ON_SHOW
+     glfwWindowHint(GLFW_FOCUS_ON_SHOW, false);
+ #endif
+    glfwWindowHint(GLFW_DECORATED, (viewport->Flags & ImGuiViewportFlags_NoDecoration) ? false : true);
+#if GLFW_HAS_WINDOW_TOPMOST
+    glfwWindowHint(GLFW_FLOATING, (viewport->Flags & ImGuiViewportFlags_TopMost) ? true : false);
+#endif
+    // GLFWwindow* share_window = (g_ClientApi == GlfwClientApi_OpenGL) ? g_Window : NULL;
+    // glfwCreateWindow((int)viewport->Size.x, (int)viewport->Size.y, "No Title Yet", NULL, share_window);
+
+    data->Window = Window::Create(newWindowSpec);
+    data->WindowOwned = true;
+    viewport->PlatformHandle = (void*)data->Window;
+
+    // glfwSetWindowPos(data->Window, (int)viewport->Pos.x, (int)viewport->Pos.y);
+    data->Window->MakeCurrent();
+    data->Window->SetVSyncEnabled(false);
+}
+
+
+static void InitPlatformInterface(Window& window)
+{
+    // Register platform interface (will be coupled with a renderer interface)
+    ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
+    platform_io.Platform_CreateWindow = ImGui_ImplGlfw_CreateWindow;
+    // platform_io.Platform_DestroyWindow = ImGui_ImplGlfw_DestroyWindow;
+    // platform_io.Platform_ShowWindow = ImGui_ImplGlfw_ShowWindow;
+    // platform_io.Platform_SetWindowPos = ImGui_ImplGlfw_SetWindowPos;
+    // platform_io.Platform_GetWindowPos = ImGui_ImplGlfw_GetWindowPos;
+    // platform_io.Platform_SetWindowSize = ImGui_ImplGlfw_SetWindowSize;
+    // platform_io.Platform_GetWindowSize = ImGui_ImplGlfw_GetWindowSize;
+    // platform_io.Platform_SetWindowFocus = ImGui_ImplGlfw_SetWindowFocus;
+    // platform_io.Platform_GetWindowFocus = ImGui_ImplGlfw_GetWindowFocus;
+    // platform_io.Platform_GetWindowMinimized = ImGui_ImplGlfw_GetWindowMinimized;
+    // platform_io.Platform_SetWindowTitle = ImGui_ImplGlfw_SetWindowTitle;
+    // platform_io.Platform_RenderWindow = ImGui_ImplGlfw_RenderWindow;
+    // platform_io.Platform_SwapBuffers = ImGui_ImplGlfw_SwapBuffers;
+
+// #if GLFW_HAS_WINDOW_ALPHA
+//     platform_io.Platform_SetWindowAlpha = ImGui_ImplGlfw_SetWindowAlpha;
+// #endif
+// #if GLFW_HAS_VULKAN
+//     platform_io.Platform_CreateVkSurface = ImGui_ImplGlfw_CreateVkSurface;
+// #endif
+// #if HAS_WIN32_IME
+//     platform_io.Platform_SetImeInputPos = ImGui_ImplWin32_SetImeInputPos;
+// #endif
+
+    // Register main window handle (which is owned by the main application, not by us)
+    // This is mostly for simplicity and consistency, so that our code (e.g. mouse handling etc.) can use same logic for main and secondary viewports.
+    ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+    ImGuiViewportDataGlfw* data = IM_NEW(ImGuiViewportDataGlfw)();
+    data->Window = &window;
+    data->WindowOwned = false;
+    main_viewport->PlatformUserData = data;
+    main_viewport->PlatformHandle = (void*)&window;
+}
 
 
 static void SetDisplaySize(Window& window)
@@ -44,6 +140,7 @@ void ImGuiLayer::OnAttach(Window& window)
     io.Fonts->Build();
 
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
@@ -81,6 +178,9 @@ void ImGuiLayer::OnAttach(Window& window)
     io.KeyMap[ImGuiKey_X] = KeyCode::X;
     io.KeyMap[ImGuiKey_Y] = KeyCode::Y;
     io.KeyMap[ImGuiKey_Z] = KeyCode::Z;
+
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        InitPlatformInterface(window);
 
     const char* glsl_version = "#version 150";
     ImGui_ImplOpenGL3_Init(glsl_version);
@@ -120,6 +220,14 @@ void ImGuiLayer::EndGUI(Window& window, float deltaTime)
 {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        window.MakeCurrent();
+    }
 }
 
 
@@ -150,6 +258,11 @@ bool ImGuiLayer::OnMouseMove(Window& window, double xPos, double yPos)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.MousePos = ImVec2((float)xPos, (float)yPos);
+
+    if (io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange)
+        return false;
+
+    window.SetCursor(CursorMappings[ImGui::GetMouseCursor()]);
     return false;
 }
 

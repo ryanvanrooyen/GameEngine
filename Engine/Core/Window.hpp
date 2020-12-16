@@ -4,16 +4,29 @@
 #include "EngineCommon.h"
 #include "Events/EventSource.hpp"
 #include "Input/InputSource.hpp"
+#include "Input/Cursors.hpp"
 
 namespace Game
 {
     class Layer;
     class UILayer;
 
+
+    struct WindowSpec
+    {
+        std::string Title;
+        int Width;
+        int Height;
+        Window* ParentWindow = nullptr;
+    };
+
+
     class Window : public EventSource, public InputSource
     {
     public:
-        Window(const std::string& name, int width, int height);
+        static Window* Create(const WindowSpec& spec);
+
+        Window(const WindowSpec& spec);
         virtual ~Window();
 
         std::string Name() { return name; }
@@ -31,8 +44,6 @@ namespace Game
         void PopOverlay(Layer* overlay);
         void SetUILayer(UILayer* uiLayer);
 
-        static Window* Create(const std::string& name, Window* parent = nullptr);
-
         bool VSyncEnabled() { return vsync; }
         virtual void SetVSyncEnabled(bool enabled) = 0;
         void Close();
@@ -40,6 +51,7 @@ namespace Game
         int Width() { return width; }
         int Height() { return height; }
         virtual std::pair<int, int> GetFramebufferSize() = 0;
+        virtual void SetCursor(Cursor cursor) = 0;
 
     protected:
         std::string name;

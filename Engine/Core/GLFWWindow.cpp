@@ -16,8 +16,8 @@ static void error_callback(int error, const char* description)
 }
 
 
-GLFWWindow::GLFWWindow(GLFWWindow::Handle* windowHandle, const std::string& name, int width, int height)
-    : Window(name, width, height) , windowHandle(windowHandle)
+GLFWWindow::GLFWWindow(GLFWWindow::Handle* windowHandle, const WindowSpec& spec)
+    : Window(spec), windowHandle(windowHandle)
 {
 }
 
@@ -25,7 +25,7 @@ GLFWWindow::GLFWWindow(GLFWWindow::Handle* windowHandle, const std::string& name
 unsigned int GLFWWindow::windowCount = 0;
 
 
-GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow)
+GLFWWindow* GLFWWindow::Create(const WindowSpec& spec)
 {
     // If this is our first Window, initialize Renderer:
     if (windowCount == 0)
@@ -49,12 +49,10 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create a windowed mode window and its OpenGL context:
-    Handle* parentWindowHandle = parentWindow ? parentWindow->windowHandle : NULL;
+    GLFWWindow* parentWindow = spec.ParentWindow ? (GLFWWindow*)spec.ParentWindow : nullptr;
+    Handle* parentWindowHandle = parentWindow ? parentWindow->windowHandle : nullptr;
 
-    int width = 1920;
-    int height = 1080;
-
-    Handle* windowHandle = glfwCreateWindow(width, height, name.c_str(), NULL, parentWindowHandle);
+    Handle* windowHandle = glfwCreateWindow(spec.Width, spec.Height, spec.Title.c_str(), nullptr, parentWindowHandle);
     if (!windowHandle)
     {
         ERROR("GLFW Window creation failed.");
@@ -77,10 +75,9 @@ GLFWWindow* GLFWWindow::Create(const std::string& name, GLFWWindow* parentWindow
         INFO("OpenGL Version {}", glGetString(GL_VERSION));
     }
 
-
     Renderer::EnableAlphaBlending();
 
-    GLFWWindow* newWindow = new GLFWWindow(windowHandle, name, width, height);
+    GLFWWindow* newWindow = new GLFWWindow(windowHandle, spec);
 
     glfwSetWindowUserPointer(windowHandle, newWindow);
     glfwSetWindowCloseCallback(windowHandle, Event_WindowClose);
@@ -277,6 +274,34 @@ std::pair<int, int> GLFWWindow::GetFramebufferSize()
     int width, height;
     glfwGetFramebufferSize(windowHandle, &width, &height);
     return { width, height };
+}
+
+
+void GLFWWindow::SetCursor(Cursor cursor)
+{
+    if (cursor == currentCursor)
+        return;
+
+    TRACE("Setting cursor: {}", cursor);
+    if (cursor == Cursor::None)
+    {
+        glfwSetInputMode(windowHandle, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        return;
+    }
+
+    GLFWcursor* glfwCursor = glfwCreateStandardCursor(cursor);
+    if (!glfwCursor)
+    {
+        WARN("Unable to create cursor: {}", cursor);
+        cursor = Cursor::Arrow;
+        glfwCursor = glfwCreateStandardCursor(cursor);
+    }
+    glfwSetCursor(windowHandle, glfwCursor);
+
+    if (currentCursor == Cursor::None)
+        glfwSetInputMode(windowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+    currentCursor = cursor;
 }
 
 

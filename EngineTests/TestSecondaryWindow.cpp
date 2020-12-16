@@ -60,7 +60,7 @@ bool TestSecondaryWindow::OnKeyPress(Window& window, KeyCode key)
         }
         else
         {
-            secondaryWindow = Window::Create("Secondary Window", &window);
+            secondaryWindow = Window::Create({"Secondary Window", 1280, 720, &window});
         }
 
         return true;

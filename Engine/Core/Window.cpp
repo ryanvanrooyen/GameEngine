@@ -10,15 +10,15 @@
 namespace Game
 {
 
-Window* Window::Create(const std::string& name, Window* parent)
+Window* Window::Create(const WindowSpec& spec)
 {
     // TODO: This should use a preprocessor flag to decide what type of window to create:
-    return GLFWWindow::Create(name, (GLFWWindow*)parent);
+    return GLFWWindow::Create(spec);
 }
 
 
-Window::Window(const std::string& name, int width, int height)
-    : name(name), width(width), height(height)
+Window::Window(const WindowSpec& spec)
+    : name(spec.Title), width(spec.Width), height(spec.Height)
 {
 }
 

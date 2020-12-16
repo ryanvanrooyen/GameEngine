@@ -13,7 +13,9 @@ namespace Game
     public:
         using Handle = GLFWwindow;
 
-        GLFWWindow(Handle* windowHandle, const std::string& name, int width, int height);
+        static GLFWWindow* Create(const WindowSpec& spec);
+
+        GLFWWindow(Handle* windowHandle, const WindowSpec& spec);
         virtual ~GLFWWindow();
 
         virtual void MakeCurrent() override;
@@ -23,8 +25,6 @@ namespace Game
 
         virtual void SetVSyncEnabled(bool enabled) override;
 
-        static GLFWWindow* Create(const std::string& name, GLFWWindow* parentWindow = nullptr);
-
         virtual bool IsKeyPressed(KeyCode key) override;
         virtual bool IsMousePressed(MouseCode button) override;
         virtual std::pair<double, double> GetMousePosition() override;
@@ -33,11 +33,14 @@ namespace Game
 
         virtual std::pair<int, int> GetFramebufferSize() override;
 
+        virtual void SetCursor(Cursor cursor) override;
+
         Handle* GetHandle() { return windowHandle; }
 
     private:
         static unsigned int windowCount;
         Handle* windowHandle = nullptr;
+        Cursor currentCursor = Cursor::Arrow;
 
         static void Event_WindowClose(Handle* handle);
         static void Event_WindowRefresh(Handle* handle);
